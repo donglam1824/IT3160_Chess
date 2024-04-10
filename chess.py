@@ -2,7 +2,7 @@ import pygame
 
 pygame.init()
 
-WIDTH = 800    #kich thuoc man hinh
+WIDTH = 1000    #kich thuoc man hinh
 HEIGHT = 800
 screen = pygame.display.set_mode([WIDTH, HEIGHT])
 pygame.display.set_caption('Bài tập lớn: Cờ vua')
@@ -94,27 +94,29 @@ game_over = False
 
 #bàn cờ
 def draw_board():
-    for i in range(32):
-        column = i % 4 # 0,1,2,3
-        row = i // 4   # 0,1,2,3,4,5,6,7
-        if row % 2 == 0:
-            pygame.draw.rect(screen, 'light gray', [600 - (column*200), row*100, 100, 100]) #vẽ ô cờ
-        else:
-            pygame.draw.rect(screen, 'light gray', [700 - (column*200), row*100, 100, 100])
-        pygame.draw.rect(screen, 'gray', [0, 800, WIDTH, 100])
-        pygame.draw.rect(screen, 'gold', [0, 800, WIDTH, 100], 5)
-        pygame.draw.rect(screen, 'gold', [800, 0, 200, HEIGHT], 5)
+    LIGHT_SQUARE_COLOR = (209, 139, 71)  # Màu ô vuông
+    DARK_SQUARE_COLOR = (255, 206, 158)
+    for row in range(8):
+        for col in range(8):
+            if (row + col) % 2 == 0:
+                pygame.draw.rect(screen, LIGHT_SQUARE_COLOR, [col * 100, row * 100, 100, 100])
+            else:
+                pygame.draw.rect(screen, DARK_SQUARE_COLOR, [col * 100, row * 100, 100, 100])
 
-        status_text = ['Trắng đang chọn quân', 'Trắng đang chọn nước đi',
+    pygame.draw.rect(screen, 'gray', [0, 800, WIDTH, 100])
+    pygame.draw.rect(screen, 'gold', [0, 800, WIDTH, 100], 5)
+    pygame.draw.rect(screen, 'gold', [800, 0, 200, HEIGHT], 5)
+
+    status_text = ['Trắng đang chọn quân', 'Trắng đang chọn nước đi',
                        'Đen đang chọn quân', 'Đen đang chọn nước đi']
-        #hiện text tương ứng với trạng thái
-        screen.blit(big_font.render(
+    #hiện text tương ứng với trạng thái
+    screen.blit(big_font.render(
             status_text[turn_step], True, 'black'), (20, 820))
         
-        for i in range(9):
+    for i in range(9):
             pygame.draw.line(screen, 'black', (0, 100 * i), (800, 100 * i), 2)
             pygame.draw.line(screen, 'black', (100 * i, 0), (100 * i, 800), 2)
-        screen.blit(medium_font.render('FORFEIT', True, 'black'), (810, 830))
+    screen.blit(medium_font.render('FORFEIT', True, 'black'), (810, 830))
            
 #vẽ các quân
 def draw_pieces():
@@ -143,7 +145,7 @@ def draw_pieces():
             if selection == i:
                 pygame.draw.rect(screen, 'blue', [black_locations[i][0] * 100 + 1, black_locations[i][1] * 100 + 1, 100, 100], 2)
 
-# function to check all pieces valid options on board
+# kiểm tra các nước hợp lệ cho mọi quân
 def check_options(pieces, locations, turn):
     moves_list = []
     all_moves_list = []
@@ -166,7 +168,7 @@ def check_options(pieces, locations, turn):
     return all_moves_list
 
 
-# check king valid moves
+# nước hợp lệ của vua
 def check_king(position, color):
     moves_list = []
     if color == 'white':
@@ -175,7 +177,7 @@ def check_king(position, color):
     else:
         friends_list = black_locations
         enemies_list = white_locations
-    # 8 squares to check for kings, they can go one square any direction
+    # 8 cách đi
     targets = [(1, 0), (1, 1), (1, -1), (-1, 0),
                (-1, 1), (-1, -1), (0, 1), (0, -1)]
     for i in range(8):
@@ -185,7 +187,7 @@ def check_king(position, color):
     return moves_list
 
 
-# check queen valid moves
+# nước hợp lệ của hậu = tượng + xe
 def check_queen(position, color):
     moves_list = check_bishop(position, color)
     second_list = check_rook(position, color)
@@ -194,7 +196,7 @@ def check_queen(position, color):
     return moves_list
 
 
-# check bishop moves
+# nước hợp lệ của tượng
 def check_bishop(position, color):
     moves_list = []
     if color == 'white':
@@ -203,7 +205,7 @@ def check_bishop(position, color):
     else:
         friends_list = black_locations
         enemies_list = white_locations
-    for i in range(4):  # up-right, up-left, down-right, down-left
+    for i in range(4):  # 4 cách đi chéo
         path = True
         chain = 1
         if i == 0:
@@ -231,7 +233,7 @@ def check_bishop(position, color):
     return moves_list
 
 
-# check rook moves
+# nước hợp lệ của xe
 def check_rook(position, color):
     moves_list = []
     if color == 'white':
@@ -240,7 +242,7 @@ def check_rook(position, color):
     else:
         friends_list = black_locations
         enemies_list = white_locations
-    for i in range(4):  # down, up, right, left
+    for i in range(4):  # lên, xuống, trái, phải
         path = True
         chain = 1
         if i == 0:
@@ -268,7 +270,7 @@ def check_rook(position, color):
     return moves_list
 
 
-# check valid pawn moves
+# nước hợp lệ của tốt
 def check_pawn(position, color):
     moves_list = []
     if color == 'white':
@@ -296,7 +298,7 @@ def check_pawn(position, color):
     return moves_list
 
 
-# check valid knight moves
+# nước hợp lệ của mã
 def check_knight(position, color):
     moves_list = []
     if color == 'white':
@@ -305,7 +307,7 @@ def check_knight(position, color):
     else:
         friends_list = black_locations
         enemies_list = white_locations
-    # 8 squares to check for knights, they can go two squares in one direction and one in another
+    #  8 nước đi hợp lệ cho mã hình chữ L
     targets = [(1, 2), (1, -2), (2, 1), (2, -1),
                (-1, 2), (-1, -2), (-2, 1), (-2, -1)]
     for i in range(8):
@@ -315,7 +317,7 @@ def check_knight(position, color):
     return moves_list
 
 
-# check for valid moves for just selected piece
+# nước hợp lệ cho quân đang chọn
 def check_valid_moves():
     if turn_step < 2:
         options_list = white_options
@@ -325,7 +327,7 @@ def check_valid_moves():
     return valid_options
 
 
-# draw valid moves on screen
+# vẽ nước hợp lệ trên bàn cờ
 def draw_valid(moves):
     if turn_step < 2:
         color = 'red'
@@ -336,7 +338,7 @@ def draw_valid(moves):
             screen, color, (moves[i][0] * 100 + 50, moves[i][1] * 100 + 50), 5)
 
 
-# draw captured pieces on side of screen
+# vẽ quân bắt được ở cạnh bàn cờ
 def draw_captured():
     for i in range(len(captured_white_pieces)):
         captured_piece = captured_white_pieces[i]
@@ -348,7 +350,7 @@ def draw_captured():
         screen.blit(small_white_images[index], (925, 5 + 50 * i))
 
 
-# draw a flashing square around king if in check
+# ô vua nhấp nháy nếu bị chiếu
 def draw_check():
     if turn_step < 2:
         if 'king' in white_pieces:
@@ -373,12 +375,12 @@ def draw_check():
 def draw_game_over():
     pygame.draw.rect(screen, 'black', [200, 200, 400, 70])
     screen.blit(font.render(
-        f'{winner} won the game!', True, 'white'), (210, 210))
+        f'{winner} giành chiến thắng!', True, 'white'), (210, 210))
     screen.blit(font.render(f'Press ENTER to Restart!',
                 True, 'white'), (210, 240))
 
 
-# main game loop
+# main
 black_options = check_options(black_pieces, black_locations, 'black')
 white_options = check_options(white_pieces, white_locations, 'white')
 run = True
@@ -388,7 +390,7 @@ while run:
         counter += 1
     else:
         counter = 0
-    screen.fill('dark gray')
+    
     draw_board()
     draw_pieces()
     draw_captured()
@@ -415,7 +417,7 @@ while run:
                     white_locations[selection] = click_coords
                     if click_coords in black_locations:
                         black_piece = black_locations.index(click_coords)
-                        captured_pieces_white.append(black_pieces[black_piece])
+                        captured_white_pieces.append(black_pieces[black_piece])
                         if black_pieces[black_piece] == 'king':
                             winner = 'white'
                         black_pieces.pop(black_piece)
@@ -438,7 +440,7 @@ while run:
                     black_locations[selection] = click_coords
                     if click_coords in white_locations:
                         white_piece = white_locations.index(click_coords)
-                        captured_pieces_black.append(white_pieces[white_piece])
+                        captured_black_pieces.append(white_pieces[white_piece])
                         if white_pieces[white_piece] == 'king':
                             winner = 'black'
                         white_pieces.pop(white_piece)
