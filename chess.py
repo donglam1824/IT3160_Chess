@@ -383,6 +383,7 @@ def draw_game_over():
 # main
 black_options = check_options(black_pieces, black_locations, 'black')
 white_options = check_options(white_pieces, white_locations, 'white')
+screen.fill('gray')
 run = True
 while run:
     timer.tick(fps)
