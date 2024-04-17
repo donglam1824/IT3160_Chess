@@ -478,7 +478,7 @@ while run:
     if winner != '':
         game_over = True
         draw_game_over()
-
+#    print(selection, counter)
     pygame.display.flip()
 
 pygame.quit()

@@ -4,7 +4,7 @@ from copy import deepcopy
 class Paw(ChessPiece):
     "Tốt"
     def __init__(self, position, side):
-        super().__init__(position, 10, "Paw", side)
+        super().__init__(position, 10, "Pawn", side)
         #KT di chuyển chưa
     def displayMovableTile(self, board):
         if(self.side == "White"): move_vector = 1

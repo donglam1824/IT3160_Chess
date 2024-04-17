@@ -19,7 +19,9 @@ class Minimax:
                     copy_board = deepcopy(board)
                     p_index = board.player_white.chess_pieces.index(piece)
                     copy_piece = copy_board.player_white.chess_pieces[p_index]
+                    #Tạo copy của bàn cờ
                     copy_piece.makeMove(move, copy_board)
+                    #Đệ quy, tìm nhánh dưới
                     board_value = self.miniMax(best_value, piece_index, best_move, not is_max, depth - 1, copy_board, alpha, beta)[0]
                     if(best_value < board_value and is_max == True): 
                         best_value = board_value

@@ -46,6 +46,7 @@ class ChessBoard:
         elif(side == "Black"): return self.player_black.evaluateBoard() - self.player_white.evaluateBoard()
     def endGame(self):
         "KT game kết thúc chưa, return [True/False, bên thắng]"
+        #Đầu tiên KT vua còn nước đi nào nữa không, rồi KT vua có bị chiếu không
         #KT vua quân Trắng
         if(len(self.player_white.king.displayMovableTile(self)) == 0):  
             #Xem vua có đang bị chiếu không
@@ -55,6 +56,7 @@ class ChessBoard:
                 try:
                     movable_tile.index(king_position)
                 except ValueError:
+                    #ValueError là quân vua không ở trong đường đi của piece
                     continue
                 return [True, "Black"]
         #KT vua quân Đen
@@ -70,13 +72,6 @@ class ChessBoard:
                 return [True, "White"]
         return [False, ""]
 
-#board = ChessBoard()
-#board.player_black.paws[3].makeMove([5, 3], board)
-#board.player_black.paws[4].makeMove([5, 4], board)
-#board.player_white.bishop_2.makeMove([6, 3], board)
-#board.printBoard()
-#print(board.player_black.king.displayMovableTile(board))
-#print(board.endGame())
 #print(board.player_white.rock_1.position , board.player_white.rock_1.displayMovableTile())
 #print(board.player_black.bishop_2.position ,board.player_black.bishop_2.displayMovableTile(board))
 #print(board.player_white.queen.position ,board.player_white.queen.displayMovableTile())
