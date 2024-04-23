@@ -1,8 +1,9 @@
+import time
 import pygame
 
 from MiniMaxClass import Minimax
-from ChessBoardClass import ChessBoard
-from ChessInterface import Interface
+from Base.ChessBoardClass import ChessBoard
+from Base.ChessInterface import Interface
 
 current_board = ChessBoard()
 minimax_white = Minimax("White")
@@ -27,14 +28,16 @@ while run:
         if event.type == pygame.QUIT:
             run = False
     if(current_board.endGame()[0] == False):
+        tic = time.perf_counter()
         if(interface.turn_step <= 1):
-            best = minimax_white.miniMax(0, "", "", True, 1, current_board, -float("Inf"), float("Inf"))
+            best = minimax_white.miniMax(0, "", "", True, 2, current_board, -float("Inf"), float("Inf"))
             current_board.player_white.chess_pieces[best[1]].makeMove(best[2], current_board)
             interface.turn_step = 2
         elif(interface.turn_step > 1 and interface.turn_step <= 3):
             best = minimax_black.miniMax(0, "", "", True, 3, current_board, -float("Inf"), float("Inf"))
             current_board.player_black.chess_pieces[best[1]].makeMove(best[2], current_board)
             interface.turn_step = 0
+        print(time.perf_counter() - tic, "second")
     else:
         interface.draw_game_over(current_board.endGame()[1])
     

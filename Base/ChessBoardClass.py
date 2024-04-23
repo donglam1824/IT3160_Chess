@@ -1,4 +1,4 @@
-from PlayerClass import BlackPlayer, WhitePlayer
+from Base.PlayerClass import BlackPlayer, WhitePlayer
 
 class ChessBoard:
     def __init__(self):
@@ -16,6 +16,8 @@ class ChessBoard:
         for piece in self.player_white.chess_pieces:
             name = piece.getPieceName("White")
             self.board_display[piece.position[0]][piece.position[1]] = name
+        self.player_black.initalizePieces(self)
+        self.player_white.initalizePieces(self)
     def printBoard(self):
         "Print the chess board base on the white player perspective"
         print("|")
@@ -25,12 +27,16 @@ class ChessBoard:
             print("{:3} {:3} {:3} {:3} {:3} {:3} {:3} {:3}".format(*line), end = " ")
             print("__")
         print("|")
+    def getAllPieces(self):
+        "Trả về mọi quân cờ còn trên bàn cờ"
+        chess_pieces = []
+        chess_pieces.extend(self.player_black.chess_pieces)
+        chess_pieces.extend(self.player_white.chess_pieces)
+        return chess_pieces
     def locatePiece(self, position):
         "Xác định quân cờ trên 1 position, return object Quân cờ"
-        for piece in self.player_black.chess_pieces:
-            if(piece.position == position):
-                return piece
-        for piece in self.player_white.chess_pieces:
+        chess_pieces = self.getAllPieces()
+        for piece in chess_pieces:
             if(piece.position == position):
                 return piece
         return "No piece in this position"
@@ -48,11 +54,11 @@ class ChessBoard:
         "KT game kết thúc chưa, return [True/False, bên thắng]"
         #Đầu tiên KT vua còn nước đi nào nữa không, rồi KT vua có bị chiếu không
         #KT vua quân Trắng
-        if(len(self.player_white.king.displayMovableTile(self)) == 0):  
+        if(len(self.player_white.king.available_move) == 0):  
             #Xem vua có đang bị chiếu không
             king_position = self.player_white.king.position
             for piece in self.player_black.chess_pieces:
-                movable_tile = piece.displayMovableTile(self)
+                movable_tile = piece.available_move
                 try:
                     movable_tile.index(king_position)
                 except ValueError:
@@ -60,11 +66,11 @@ class ChessBoard:
                     continue
                 return [True, "Black"]
         #KT vua quân Đen
-        if(len(self.player_black.king.displayMovableTile(self)) == 0):  
+        if(len(self.player_black.king.available_move) == 0):  
             #Xem vua có đang bị chiếu không
             king_position = self.player_black.king.position
             for piece in self.player_white.chess_pieces:
-                movable_tile = piece.displayMovableTile(self)
+                movable_tile = piece.available_move
                 try:
                     movable_tile.index(king_position)
                 except ValueError:
@@ -72,8 +78,3 @@ class ChessBoard:
                 return [True, "White"]
         return [False, ""]
 
-#print(board.player_white.rock_1.position , board.player_white.rock_1.displayMovableTile())
-#print(board.player_black.bishop_2.position ,board.player_black.bishop_2.displayMovableTile(board))
-#print(board.player_white.queen.position ,board.player_white.queen.displayMovableTile())
-#print(board.player_white.knight_1.position ,board.player_white.knight_1.displayMovableTile(board))
-#print(board.evaluateBoard("White"), board.evaluateBoard("Black"))

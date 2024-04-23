@@ -1,10 +1,12 @@
-import pygame
+import pygame, time
 
 from Base.ChessBoardClass import ChessBoard
 from Base.ChessInterface import Interface
+from MiniMaxClass import Minimax
 
 board = ChessBoard()
 interface = Interface(board)
+minimax_black = Minimax("Black")
 run = True
 pygame.display.flip()
 movable_tile = []
@@ -33,6 +35,7 @@ while run:
                 choosen_piece.makeMove(click_coords ,board)
                 movable_tile = []
                 interface.turn_step = 2
+                continue
             if(interface.turn_step <= 1):
                 #Turn của bên White đi
                 choosen_piece = board.locatePiece(click_coords)
@@ -44,22 +47,12 @@ while run:
                     movable_tile = choosen_piece.displayMovableTile(board)
                 except AttributeError: pass #Chọn ô ko có quân cờ
                 interface.turn_step = 1
-            if(interface.turn_step == 3 and click_coords in movable_tile):
-                #Di chuyển quân cờ trên các ô màu đỏ
-                choosen_piece.makeMove(click_coords ,board)
-                movable_tile = []
+        if(interface.turn_step > 1 and interface.turn_step <= 3):
+                tic = time.perf_counter()
+                best = minimax_black.miniMax(0, "", "", True, 3, board, -float("Inf"), float("Inf"))
+                print(time.perf_counter() - tic, "seconds")
+                board.player_black.chess_pieces[best[1]].makeMove(best[2], board)
                 interface.turn_step = 0
-            if(interface.turn_step <= 3 and interface.turn_step > 1):
-                #Turn của bên White đi
-                choosen_piece = board.locatePiece(click_coords)
-                if(choosen_piece in board.player_white.chess_pieces): 
-                    choosen_piece = ""
-                    continue
-                #Tìm các nước đi
-                try:
-                    movable_tile = choosen_piece.displayMovableTile(board)
-                except AttributeError: pass #Chọn ô ko có quân cờ
-                interface.turn_step = 3
     interface.draw_valid(movable_tile, choosen_piece)
     pygame.display.update()
 pygame.quit()

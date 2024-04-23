@@ -1,4 +1,4 @@
-from ChessAtribute import ChessPiece
+from Base.ChessAtribute import ChessPiece
 from copy import deepcopy
 
 class Paw(ChessPiece):
@@ -31,6 +31,8 @@ class Paw(ChessPiece):
                 movable_tile.append(check_tile)
         except AttributeError:
             pass
+        self.available_move = movable_tile
+        self.gradePiece(5)
         return movable_tile
 class Rock(ChessPiece):
     "Xe"
@@ -40,14 +42,22 @@ class Rock(ChessPiece):
         self.has_moved = False
     def displayMovableTile(self, board):
         "Tìm các nước có thể đi hiện tại"
-        return self.updateMove_Multiple([[1, 0], [0, 1], [-1, 0], [0, -1]], board)
+        movable_tile = self.updateMove_Multiple([[1, 0], [0, 1], [-1, 0], [0, -1]], board)
+        self.gradePiece(15)
+        return movable_tile
 
 class Knight(ChessPiece):
     "Mã"
     def __init__(self, position, side):
         super().__init__(position, 150, "Knight", side)
+        #Khởi tạo bước đi đầu
     def displayMovableTile(self, board):
-        return self.updateMove_Singular([[2, 1], [-2, 1], [2, -1], [-2, -1], [1, 2], [-1, 2], [1, -2], [-1, -2]], board)
+        movable_tile = self.updateMove_Singular([[2, 1], [-2, 1], [2, -1], [-2, -1], 
+                                         [1, 2], [-1, 2], [1, -2], [-1, -2]], board)
+        self.available_move = movable_tile
+        self.gradePiece(30)
+        return movable_tile
+                                         
 
 
 class Bishop(ChessPiece):
@@ -56,20 +66,25 @@ class Bishop(ChessPiece):
         super().__init__(position, 100, "Bishop", side)
     def displayMovableTile(self, board):
         "Tìm các nước có thể đi hiện tại"
-        return self.updateMove_Multiple([[1, 1], [-1, 1], [1, -1], [-1, -1]], board)
+        movable_tile = self.updateMove_Multiple([[1, 1], [-1, 1], [1, -1], [-1, -1]], board)
+        self.gradePiece(15)
+        return movable_tile
 
 class Queen(ChessPiece):
     "Hậu"
     def __init__(self, position, side):
-        super().__init__(position, 300, "Queen", side)
+        super().__init__(position, 500, "Queen", side)
     def displayMovableTile(self, board):
         "Tìm các nước có thể đi hiện tại"
-        return self.updateMove_Multiple([[1, 0], [0, 1], [-1, 0], [0, -1], [1, 1], [-1, 1], [1, -1], [-1, -1]], board)
+        movable_tile = self.updateMove_Multiple([[1, 0], [0, 1], [-1, 0], [0, -1], 
+                                                 [1, 1], [-1, 1], [1, -1], [-1, -1]], board)
+        self.gradePiece(15)
+        return movable_tile
 
 class King(ChessPiece):
     "Vua"
     def __init__(self, position, side):
-        super().__init__(position, 1000, "King", side)
+        super().__init__(position, 10000, "King", side)
         #KT di chuyển chưa để có nhập thành
         self.has_moved = False
     def displayMovableTile(self, board):
@@ -86,4 +101,5 @@ class King(ChessPiece):
                 except ValueError:
                     continue
                 movable_tile.remove(move)
+        self.available_move = movable_tile
         return movable_tile

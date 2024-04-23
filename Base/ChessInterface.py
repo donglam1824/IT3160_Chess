@@ -1,6 +1,6 @@
 import pygame
-from ChessBoardClass import ChessBoard
-from PiecePicture import PieceImage
+from Base.ChessBoardClass import ChessBoard
+from Base.PiecePicture import PieceImage
 
 class Interface:
     "Vẽ dao diện cho game"
@@ -118,8 +118,8 @@ class Interface:
             pygame.draw.rect(self.screen, 'dark red', [king_location[1] * 100 + 1,
                         king_location[0] * 100 + 1, 100, 100], 5)
 
-
     def draw_game_over(self, winner):
+        "Vẽ màn hình kết thúc"
         pygame.draw.rect(self.screen, 'black', [200, 200, 400, 70])
         self.screen.blit(self.font.render(f'{winner} giành chiến thắng!', True, 'white'), (210, 210))
         self.screen.blit(self.font.render(f'Press ENTER to Restart!',True, 'white'), (210, 240))
