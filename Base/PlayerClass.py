@@ -1,4 +1,4 @@
-from ChessPieces import Paw, Rock, Knight, Bishop, Queen, King
+from Base.ChessPieces import Paw, Rock, Knight, Bishop, Queen, King
 
 class Player:
     "Biểu hiệu của 2 người chơi"
@@ -17,11 +17,24 @@ class Player:
         self.queen = Queen([h, 3], side)
         self.king = King([h, 4], side)
         self.chess_pieces = self.paws
-        self.chess_pieces.extend([self.rock_1, self.rock_2, self.bishop_1, self.bishop_2, self.knight_1, self.knight_2, self.queen, self.king])
+        self.chess_pieces.extend([self.rock_1, self.rock_2, self.bishop_1, self.bishop_2, 
+                                  self.knight_1, self.knight_2, self.queen, self.king])
+    def initalizePieces(self, board):
+        for piece in self.chess_pieces:
+            piece.displayMovableTile(board)
+            piece.gradePiece()
+        self.king.rock_1 = self.rock_1
+        self.king.rock_2 = self.rock_2
+    def phongHau(self, piece = Paw):
+        "Tiến hành phong hậu cho tốt"
+        index = self.chess_pieces.index(piece)
+        new_queen = Queen(piece.position, piece.side)
+        self.chess_pieces.remove(piece)
+        self.chess_pieces.append(new_queen)
     def evaluateBoard(self):
         value = 0
         for piece in self.chess_pieces:
-            value += piece.piece_value
+            value += piece.value
         return value
         
 class BlackPlayer(Player):

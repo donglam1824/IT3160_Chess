@@ -1,4 +1,5 @@
-from ChessBoardClass import ChessBoard
+import time
+from Base.ChessBoardClass import ChessBoard
 from MiniMaxClass import Minimax
 
 board = ChessBoard()
@@ -9,5 +10,7 @@ board.player_white.bishop_2.makeMove([4, 1], board)
 board.printBoard()
 print(board.player_black.king.displayMovableTile(board))
 print(board.endGame())
-best = minimax_black.miniMax(0, "", "", True, 2, board, -float("Inf"), float("Inf"))
+tic = time.perf_counter()
+best = minimax_black.miniMax(0, "", "", True, 3, board, -float("Inf"), float("Inf"))
+print(time.perf_counter()-tic)
 print(best[0], board.player_black.chess_pieces[best[1]].name, best[2])
