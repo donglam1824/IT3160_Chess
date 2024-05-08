@@ -11,6 +11,7 @@ run = True
 pygame.display.flip()
 movable_tile = []
 choosen_piece = ""
+turn = ""
 
 while run:
     interface.timer.tick(interface.fps)
@@ -35,6 +36,7 @@ while run:
                 choosen_piece.makeMove(click_coords ,board)
                 movable_tile = []
                 interface.turn_step = 2
+                print("White point:" , board.evaluateBoard("White"), "turn: White")
                 continue
             if(interface.turn_step <= 1):
                 #Turn của bên White đi
@@ -53,6 +55,7 @@ while run:
                 print(time.perf_counter() - tic, "seconds")
                 board.player_black.chess_pieces[best[1]].makeMove(best[2], board)
                 interface.turn_step = 0
+                print("White point:" , board.evaluateBoard("White"), "turn: Black")
     interface.draw_valid(movable_tile, choosen_piece)
     pygame.display.update()
 pygame.quit()

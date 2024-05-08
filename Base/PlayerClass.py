@@ -22,7 +22,15 @@ class Player:
     def initalizePieces(self, board):
         for piece in self.chess_pieces:
             piece.displayMovableTile(board)
-            piece.gradePiece(piece.base_value/10)
+            piece.gradePiece()
+        self.king.rock_1 = self.rock_1
+        self.king.rock_2 = self.rock_2
+    def phongHau(self, piece = Paw):
+        "Tiến hành phong hậu cho tốt"
+        index = self.chess_pieces.index(piece)
+        new_queen = Queen(piece.position, piece.side)
+        self.chess_pieces.remove(piece)
+        self.chess_pieces.append(new_queen)
     def evaluateBoard(self):
         value = 0
         for piece in self.chess_pieces:

@@ -1,4 +1,5 @@
 from copy import deepcopy
+from Base.PieceEvaluation import EvaluatePiece
 
 class ChessPiece:
     "Các thược tính cơ bản của quân cờ"
@@ -12,8 +13,8 @@ class ChessPiece:
         self.has_moved = False
         self.side = side
         self.available_move = []
-        #Các quân cờ sẽ được update khi quân cờ này di chuyển
-        self.linked_pieces = []
+        self.linked_pieces = [] #Các quân cờ sẽ được update khi quân cờ này di chuyển
+        self.score_table = EvaluatePiece.initailizeScore(name, side) # Điểm theo vị trí của bàn cờ
     def getPieceName(self, side):
         "Tìm ký hiệu của quân cờ trên bàn cơ <Không cần thiết khi có dao diện>"
         if(side == "White"): name = "w"
@@ -47,11 +48,8 @@ class ChessPiece:
             piece.displayMovableTile(board)
     def isEaten(self, board):
         self.is_dead = True
-    def gradePiece(self, multipler):
-        value = self.base_value
-        for move in self.available_move:
-            value += multipler
-        self.value = value
+    def gradePiece(self):
+        self.value = self.base_value + self.score_table[self.position[0]][self.position[1]]
     def isInTheBoard(position):
         "KT xem nước đi còn trong bàn cờ không"
         if(position[0] < 0 or position[1] < 0): return False
@@ -82,8 +80,10 @@ class ChessPiece:
                 #Ra khỏi bàn cờ
                 continue
         self.available_move = movable_tile
+        self.gradePiece()
         return movable_tile
     def updateMove_Singular(self, move_vectors, board):
+        "Trả về các ô đi được của quân cờ đi được 1 ô ô (Tốt, Mã, Vua)"
         movable_tile = []
         for vector in move_vectors:
             check_tile = deepcopy(self.position)
@@ -102,6 +102,7 @@ class ChessPiece:
                         block_piece.linked_pieces.append(self)
                     if(block_piece.side != self.side and len(move_vectors) > 1):
                         movable_tile.append(deepcopy(check_tile))
+        self.gradePiece()
         return movable_tile
 
         
