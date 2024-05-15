@@ -28,7 +28,6 @@ class WhiteMax():
                         piece_index = p_index
                         best_move = move
                         alpha = max(best_value, alpha)
-                        print("$max", end = " ")
                     if(beta <= alpha): break
                 if(beta <= alpha): break
         else:

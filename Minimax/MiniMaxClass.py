@@ -9,5 +9,5 @@ class Minimax:
         if(maxing_player == "White"): self.miniMaxer = WhiteMax()
         else: self.miniMaxer = BlackMax()
     def miniMax(self, best_value, piece_index, best_move , is_max, depth, board = ChessBoard, alpha = float, beta = float):
-        return self.miniMaxer.miniMax(best_value, piece_index, best_move , is_max, depth, board = ChessBoard, alpha = float, beta = float)
+        return self.miniMaxer.miniMax(best_value, piece_index, best_move , is_max, depth, board, alpha, beta)
         

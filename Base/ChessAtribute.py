@@ -1,6 +1,5 @@
 from copy import deepcopy
 from Base.PieceEvaluation import EvaluatePiece
-
 class ChessPiece:
     "Các thược tính cơ bản của quân cờ"
     def __init__(self, position, piece_value, name, side):
@@ -38,24 +37,28 @@ class ChessPiece:
         self.displayMovableTile(board)
         #Update nhưng quân cờ mà trùng đường đi với vị trí cũ và mới của quân này
         linked_pieces = self.linked_pieces
-        self.linked_piece = []
-        #for piece in linked_pieces:
-        #    piece.displayMovableTile(board)
+        self.linked_pieces = []
+        for piece in linked_pieces:
+            piece.displayMovableTile(board)
+            continue
         chess_pieces = board.getAllPieces()
         for piece in chess_pieces:
-        #    if(piece.name == "Pawn"):
-        #        piece.displayMovableTile(board)
-        #        continue
-        #    try:
-        #        piece.available_move.index(new_position)
-        #    except ValueError:
-        #        continue
-            piece.displayMovableTile(board)
+            #Kiểm tra xem có tốt địch ở gần mà có khả năng ăn không
+            vector = 1 if(self.side == "White") else -1
+            if(piece.name == "Pawn" and piece.side != self.side 
+               and [piece.position[0] - new_position[0], abs(piece.position[1] - new_position[1])] == [vector, 1]):
+                    piece.displayMovableTile(board)
+            try:
+                piece.available_move.index(new_position)
+                piece.displayMovableTile(board)
+            except ValueError:
+                continue
 
     def isEaten(self, board):
         self.is_dead = True
         for piece in self.linked_pieces:
-            piece.displayMovableTile(board)
+            if(piece.side == self.side):
+                piece.available_move.append(self.position)
 
     def gradePiece(self):
         self.value = self.base_value + self.score_table[self.position[0]][self.position[1]]

@@ -8,8 +8,6 @@ class Interface:
     HEIGHT = 800
     fps = 60
     selection = 100
-    captured_white_pieces = []
-    captured_black_pieces = []
     
     def __init__(self, board = ChessBoard):
         pygame.init()
@@ -97,14 +95,16 @@ class Interface:
     # vẽ quân bắt được ở cạnh bàn cờ
     def draw_captured(self):
         image = PieceImage()
-        for i in range(len(self.captured_white_pieces)):
-            captured_piece = self.captured_white_pieces[i]
-            index = image.piece_list.index(captured_piece)
-            self.screen.blit(image.small_black_images[index], (825, 5 + 50 * i))
-        for i in range(len(self.captured_black_pieces)):
-            captured_piece = self.captured_black_pieces[i]
-            index = image.piece_list.index(captured_piece)
-            image.screen.blit(image.small_white_images[index], (925, 5 + 50 * i))
+        count = 0
+        for piece in self.board.captured_white_pieces:
+            index = image.piece_list.index(piece.name)
+            self.screen.blit(image.small_white_images[index], (825, 5 + 50 * count))
+            count += 1
+        count = 0
+        for piece in self.board.captured_black_pieces:
+            index = image.piece_list.index(piece.name)
+            self.screen.blit(image.small_black_images[index], (925, 5 + 50 * count))
+            count += 1
 
 
     # ô vua nhấp nháy nếu bị chiếu

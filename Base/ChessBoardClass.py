@@ -18,6 +18,10 @@ class ChessBoard:
             self.board_display[piece.position[0]][piece.position[1]] = name
         self.player_black.initalizePieces(self)
         self.player_white.initalizePieces(self)
+        self.black_king = self.player_black.king
+        self.white_king = self.player_white.king
+        self.captured_white_pieces = []
+        self.captured_black_pieces = []
     def printBoard(self):
         "Vẽ cờ trên màn console"
         print("|")
@@ -46,9 +50,13 @@ class ChessBoard:
     def deletePiece(self, position):
         "Xoá quân cờ bị ăn ra khỏi bàn cờ"
         eaten_piece = self.locatePiece(position)
-        eaten_piece.is_dead = True
-        if(eaten_piece.side == "White"): self.player_white.chess_pieces.remove(eaten_piece)
-        elif(eaten_piece.side == "Black"): self.player_black.chess_pieces.remove(eaten_piece)
+        eaten_piece.isEaten(self)
+        if(eaten_piece.side == "White"): 
+            self.captured_white_pieces.append(eaten_piece)
+            self.player_white.chess_pieces.remove(eaten_piece)
+        elif(eaten_piece.side == "Black"): 
+            self.player_black.chess_pieces.remove(eaten_piece)
+            self.captured_black_pieces.append(eaten_piece)
 
     def phongHau(self, piece):
         if(piece.side == "White"): self.player_white.phongHau(piece)
@@ -61,24 +69,9 @@ class ChessBoard:
 
     def endGame(self):
         "KT game kết thúc chưa, return [True/False, bên thắng]"
-        for piece in self.player_black.chess_pieces:
-                movable_tile = piece.available_move
-                try:
-                    movable_tile.index(king_position)
-                except ValueError:
-                    #ValueError là quân vua không ở trong đường đi của piece
-                    continue
-                return [True, "Black"]
-        #KT vua quân Đen
-        if(len(self.player_black.king.available_move) == 0):  
-            #Xem vua có đang bị chiếu không
-            king_position = self.player_black.king.position
-            for piece in self.player_white.chess_pieces:
-                movable_tile = piece.available_move
-                try:
-                    movable_tile.index(king_position)
-                except ValueError:
-                    continue            
-                return [True, "White"]
+        if(self.player_black.chess_pieces.count(self.black_king) == 0):
+            return [True, "White"]
+        elif(self.player_white.chess_pieces.count(self.white_king) == 0):
+            return [True, "Black"]
         return [False, ""]
 

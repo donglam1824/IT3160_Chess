@@ -15,6 +15,7 @@ while run:
     interface.draw_board()
     interface.draw_pieces()
     #interface.draw_check()
+    interface.draw_captured()
     if interface.counter < 30:
         interface.counter += 1
     else:

@@ -12,26 +12,22 @@ class Paw(ChessPiece):
         elif(self.side == "Black"): move_vector = -1
         movable_tile = []
         if(self.has_moved == False):
-            for i in [self.position[0] + move_vector*1, self.position[0] + move_vector*2]:
-                if(board.board_display[i][self.position[1]] != "0"):
+            for pos in [self.position[0] + move_vector*1, self.position[0] + move_vector*2]:
+                if(board.board_display[pos][self.position[1]] != "0"):
+                    board.locatePiece([pos, self.position[1]]).linked_pieces.append(self) #Quân cờ có kết nối
                     break
-                movable_tile.append([i, self.position[1]]) 
+                movable_tile.append([pos, self.position[1]]) 
         else: 
             movable_tile = self.updateMove_Singular([[move_vector, 0]], board)
         #Xem 2 bên chéo quân tốt có quân địch nào để ăn được không
-        try:
-            check_tile = [self.position[0] + move_vector, self.position[1] - 1]
-            if(board.locatePiece(check_tile).side != self.side):
-                movable_tile.append(check_tile)
-        except AttributeError:
-            pass
-        #AttributeError khi trên tile kiểm tra không có quân cờ nào cả
-        try: 
-            check_tile = [self.position[0] + move_vector, self.position[1] + 1]
-            if(board.locatePiece(check_tile).side != self.side):
-                movable_tile.append(check_tile)
-        except AttributeError:
-            pass
+        for i in [-1, 1]:
+            check_tile = [self.position[0] + move_vector, self.position[1] + i]
+            if(check_tile[1] < 0 or check_tile[1] > 7): continue #Không được kiểm tra ngoài bàn cờ
+            if(board.board_display[check_tile[0]][check_tile[1]] != "0"):
+                close_piece = board.locatePiece(check_tile)
+                if(close_piece.side != self.side):
+                    movable_tile.append(check_tile)
+                    close_piece.linked_pieces.append(self)
         self.available_move = movable_tile
         self.gradePiece()
         return movable_tile

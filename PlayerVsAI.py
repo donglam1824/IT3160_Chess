@@ -17,6 +17,7 @@ while run:
     interface.timer.tick(interface.fps)
     interface.draw_board()
     interface.draw_pieces()
+    interface.draw_captured()
     #interface.draw_check()
     if interface.counter < 30:
         interface.counter += 1
@@ -51,7 +52,7 @@ while run:
                 interface.turn_step = 1
         if(interface.turn_step > 1 and interface.turn_step <= 3):
                 tic = time.perf_counter()
-                best = minimax_black.miniMax(0, "", "", True, 2, board, -float("Inf"), float("Inf"))
+                best = minimax_black.miniMax(0, "", "", True, 3, board, -float("Inf"), float("Inf"))
                 print(time.perf_counter() - tic, "seconds")
                 board.player_black.chess_pieces[best[1]].makeMove(best[2], board)
                 interface.turn_step = 0

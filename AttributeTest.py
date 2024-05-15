@@ -27,8 +27,23 @@ def printValue():
         print(piece.name, piece.position, piece.value)
 
 board = ChessBoard()
-board.printBoard()
 #print(board.player_black.paws[0].score_table)
 #printMoves()
 #printPieces()
-printValue()
+print(board.player_white.paws[3].linked_pieces)
+board.player_white.paws[3].makeMove([3,3], board)
+board.player_black.knight_1.makeMove([5,2], board)
+#board.printBoard()
+#print(board.player_white.queen.available_move)
+board.player_black.knight_1.makeMove([3,3], board)
+print(board.player_black.knight_1.linked_pieces)
+#board.printBoard()
+print(board.player_white.queen.available_move)
+#print(board.player_white.paws[3].linked_pieces)
+#print(board.player_white.queen.linked_pieces)
+#print(board.player_black.knight_1.linked_pieces)
+
+
+
+
+
