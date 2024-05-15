@@ -1,6 +1,6 @@
 import time
 from Base.ChessBoardClass import ChessBoard
-from MiniMaxClass import Minimax
+from Minimax.MiniMaxClass import Minimax
 
 board = ChessBoard()
 minimax_black = Minimax("Black")

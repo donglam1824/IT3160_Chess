@@ -61,12 +61,7 @@ class ChessBoard:
 
     def endGame(self):
         "KT game kết thúc chưa, return [True/False, bên thắng]"
-        #Đầu tiên KT vua còn nước đi nào nữa không, rồi KT vua có bị chiếu không
-        #KT vua quân Trắng
-        if(len(self.player_white.king.available_move) == 0):  
-            #Xem vua có đang bị chiếu không
-            king_position = self.player_white.king.position
-            for piece in self.player_black.chess_pieces:
+        for piece in self.player_black.chess_pieces:
                 movable_tile = piece.available_move
                 try:
                     movable_tile.index(king_position)

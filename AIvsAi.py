@@ -1,7 +1,7 @@
 import time
 import pygame
 
-from MiniMaxClass import Minimax
+from Minimax.MiniMaxClass import Minimax
 from Base.ChessBoardClass import ChessBoard
 from Base.ChessInterface import Interface
 
