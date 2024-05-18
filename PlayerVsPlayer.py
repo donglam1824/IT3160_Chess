@@ -1,11 +1,13 @@
 import pygame
 
 from Base.ChessBoardClass import ChessBoard
-from Base.ChessInterface import Interface
+from Controler.ChessInterface import Interface
 
 board = ChessBoard()
 interface = Interface(board)
 run = True
+king_is_checked = [False, ""]
+game_ended = False
 pygame.display.flip()
 movable_tile = []
 choosen_piece = ""
@@ -14,13 +16,12 @@ while run:
     interface.timer.tick(interface.fps)
     interface.draw_board()
     interface.draw_pieces()
-    #interface.draw_check()
+    if(king_is_checked[0] == True): interface.draw_check(king_is_checked[1])
     interface.draw_captured()
     if interface.counter < 30:
         interface.counter += 1
     else:
         interface.counter = 0
-
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
@@ -34,6 +35,8 @@ while run:
                 choosen_piece.makeMove(click_coords ,board)
                 movable_tile = []
                 interface.turn_step = 2
+                king_is_checked = board.kingIsChecked()
+                continue
             if(interface.turn_step <= 1):
                 #Turn của bên White đi
                 choosen_piece = board.locatePiece(click_coords)
@@ -50,6 +53,8 @@ while run:
                 choosen_piece.makeMove(click_coords ,board)
                 movable_tile = []
                 interface.turn_step = 0
+                king_is_checked = board.kingIsChecked()
+                continue
             if(interface.turn_step <= 3 and interface.turn_step > 1):
                 #Turn của bên White đi
                 choosen_piece = board.locatePiece(click_coords)

@@ -11,21 +11,7 @@ class ChessPiece:
         self.name = name
         self.has_moved = False
         self.side = side
-        self.available_move = []
-        self.linked_pieces = [] #Các quân cờ sẽ được update khi quân cờ này di chuyển
         self.score_table = EvaluatePiece.initailizeScore(name, side) # Điểm theo vị trí của bàn cờ
-
-    def getPieceName(self, side):
-        "Tìm ký hiệu của quân cờ trên bàn cơ <Không cần thiết khi có dao diện>"
-        if(side == "White"): name = "w"
-        else: name = "b"
-        if(self.name == "Pawn"): name = name + "p"
-        elif(self.name == "Rock"): name = name + "r"
-        elif(self.name == "Knight"): name = name + "kn"
-        elif(self.name == "Bishop"): name = name + "b"
-        elif(self.name == "Queen"): name = name + "q"
-        elif(self.name == "King"): name = name + "K"
-        return name
     
     def makeMove(self, new_position, board):
         if(board.board_display[new_position[0]][new_position[1]] != "0"):
@@ -34,31 +20,9 @@ class ChessPiece:
         board.board_display[self.position[0]][self.position[1]] = "0"
         self.position = new_position
         self.has_moved = True
-        self.displayMovableTile(board)
-        #Update nhưng quân cờ mà trùng đường đi với vị trí cũ và mới của quân này
-        linked_pieces = self.linked_pieces
-        self.linked_pieces = []
-        for piece in linked_pieces:
-            piece.displayMovableTile(board)
-            continue
-        chess_pieces = board.getAllPieces()
-        for piece in chess_pieces:
-            #Kiểm tra xem có tốt địch ở gần mà có khả năng ăn không
-            vector = 1 if(self.side == "White") else -1
-            if(piece.name == "Pawn" and piece.side != self.side 
-               and [piece.position[0] - new_position[0], abs(piece.position[1] - new_position[1])] == [vector, 1]):
-                    piece.displayMovableTile(board)
-            try:
-                piece.available_move.index(new_position)
-                piece.displayMovableTile(board)
-            except ValueError:
-                continue
 
     def isEaten(self, board):
         self.is_dead = True
-        for piece in self.linked_pieces:
-            if(piece.side == self.side):
-                piece.available_move.append(self.position)
 
     def gradePiece(self):
         self.value = self.base_value + self.score_table[self.position[0]][self.position[1]]
@@ -84,16 +48,11 @@ class ChessPiece:
                 #Thêm tile có quân cờ địch ăn được
                 if(ChessPiece.isInTheBoard(check_tile)):
                     block_piece = board.locatePiece(check_tile)
-                    try: 
-                        block_piece.linked_pieces.index(self)
-                    except ValueError:
-                        block_piece.linked_pieces.append(self)
                     if(block_piece.side != self.side):
                         movable_tile.append(deepcopy(check_tile))
             except IndexError:
                 #Ra khỏi bàn cờ
                 continue
-        self.available_move = movable_tile
         self.gradePiece()
         return movable_tile
     
@@ -111,10 +70,6 @@ class ChessPiece:
                 else:
                     #Tìm quân cờ nằm trên đường đi của nhau
                     block_piece = board.locatePiece(check_tile)
-                    try: 
-                        block_piece.linked_pieces.index(self)
-                    except ValueError:
-                        block_piece.linked_pieces.append(self)
                     if(block_piece.side != self.side and len(move_vectors) > 1):
                         movable_tile.append(deepcopy(check_tile))
         self.gradePiece()

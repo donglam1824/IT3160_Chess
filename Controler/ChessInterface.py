@@ -108,9 +108,8 @@ class Interface:
 
 
     # ô vua nhấp nháy nếu bị chiếu
-    def draw_check(self):
-        image = PieceImage()
-        if self.turn_step < 2:
+    def draw_check(self, side):
+        if side == "White":
             king_location = self.board.player_white.king.position
         else:
             king_location = self.board.player_black.king.position

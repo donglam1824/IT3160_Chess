@@ -14,7 +14,6 @@ class Paw(ChessPiece):
         if(self.has_moved == False):
             for pos in [self.position[0] + move_vector*1, self.position[0] + move_vector*2]:
                 if(board.board_display[pos][self.position[1]] != "0"):
-                    board.locatePiece([pos, self.position[1]]).linked_pieces.append(self) #Quân cờ có kết nối
                     break
                 movable_tile.append([pos, self.position[1]]) 
         else: 
@@ -27,8 +26,6 @@ class Paw(ChessPiece):
                 close_piece = board.locatePiece(check_tile)
                 if(close_piece.side != self.side):
                     movable_tile.append(check_tile)
-                    close_piece.linked_pieces.append(self)
-        self.available_move = movable_tile
         self.gradePiece()
         return movable_tile
     def phongHau(self, board):
@@ -60,7 +57,6 @@ class Knight(ChessPiece):
     def displayMovableTile(self, board):
         movable_tile = self.updateMove_Singular([[2, 1], [-2, 1], [2, -1], [-2, -1], 
                                          [1, 2], [-1, 2], [1, -2], [-1, -2]], board)
-        self.available_move = movable_tile
         return movable_tile
                                          
 
@@ -105,18 +101,15 @@ class King(ChessPiece):
                                                  [1, 1], [-1, 1], [1, -1], [-1, -1]], board)
         #KT nhập thành
         if(self.has_moved == False):
-            try: 
-                self.linked_pieces.index(self.rock_1)
-                if(self.rock_1.has_moved == False):
-                    movable_tile.append([self.position[0], self.position[1] - 2])
-            except ValueError:
-                pass
-            try: 
-                self.linked_pieces.index(self.rock_2)
-                if(self.rock_2.has_moved == False):
-                    movable_tile.append([self.position[0], self.position[1] + 2])
-            except ValueError:
-                pass
+            if(self.side == "White"): player = board.player_white
+            else: player = board.player_black
+            #KT Xe bên trái
+            if(player.rock_1.has_moved == False and len(self.updateMove_Multiple([[0, -1]], board)) == 3):
+                movable_tile.append([self.position[0], self.position[1] -2])
+            #KT Xe bên phải
+            if(player.rock_1.has_moved == False and len(self.updateMove_Multiple([[0, 1]], board)) == 2):
+                movable_tile.append([self.position[0], self.position[1] +2])
+
 
         #KT xem các nước đi có khiến Vua bị quân cờ địch bắt không
         # if(self.side == "White"): opponent_pieces = board.player_black.chess_pieces

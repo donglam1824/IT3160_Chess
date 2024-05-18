@@ -1,13 +1,17 @@
 import pygame, time
 
 from Base.ChessBoardClass import ChessBoard
-from Base.ChessInterface import Interface
+from Controler.ChessInterface import Interface
 from Minimax.MiniMaxClass import Minimax
+
+
 
 board = ChessBoard()
 interface = Interface(board)
 minimax_black = Minimax("Black")
 run = True
+king_is_checked = False
+game_ended = False
 pygame.display.flip()
 movable_tile = []
 choosen_piece = ""
@@ -18,7 +22,7 @@ while run:
     interface.draw_board()
     interface.draw_pieces()
     interface.draw_captured()
-    #interface.draw_check()
+    if(king_is_checked[0] == True): interface.draw_check(king_is_checked[1])
     if interface.counter < 30:
         interface.counter += 1
     else:
@@ -38,6 +42,7 @@ while run:
                 movable_tile = []
                 interface.turn_step = 2
                 print("White point:" , board.evaluateBoard("White"), "turn: White")
+                king_is_checked = board.kingIsChecked()
                 continue
             if(interface.turn_step <= 1):
                 #Turn của bên White đi
@@ -56,6 +61,7 @@ while run:
                 print(time.perf_counter() - tic, "seconds")
                 board.player_black.chess_pieces[best[1]].makeMove(best[2], board)
                 interface.turn_step = 0
+                king_is_checked = board.kingIsChecked()
                 print("White point:" , board.evaluateBoard("White"), "turn: Black")
     interface.draw_valid(movable_tile, choosen_piece)
     pygame.display.update()

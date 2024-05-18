@@ -16,7 +16,8 @@ class Player:
         self.bishop_2 = Bishop([h, 5], side)
         self.queen = Queen([h, 3], side)
         self.king = King([h, 4], side)
-        self.chess_pieces = self.paws
+        self.chess_pieces = []
+        self.chess_pieces.extend(self.paws)
         self.chess_pieces.extend([self.rock_1, self.rock_2, self.bishop_1, self.bishop_2, 
                                   self.knight_1, self.knight_2, self.queen, self.king])
     def initalizePieces(self, board):

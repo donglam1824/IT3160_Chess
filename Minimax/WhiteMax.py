@@ -12,7 +12,7 @@ class WhiteMax():
         #Xem từng nước đi một
         if(is_max == True):
             for piece in board.player_white.chess_pieces:
-                movable_tile = piece.available_move
+                movable_tile = piece.displayMovableTile(board)
                 for move in movable_tile:
                     copy_board = deepcopy(board)
                     p_index = board.player_white.chess_pieces.index(piece)
@@ -32,7 +32,7 @@ class WhiteMax():
                 if(beta <= alpha): break
         else:
             for piece in board.player_black.chess_pieces:
-                movable_tile = piece.available_move
+                movable_tile = piece.displayMovableTile(board)
                 for move in movable_tile:
                     copy_board = deepcopy(board)
                     p_index = board.player_black.chess_pieces.index(piece)
