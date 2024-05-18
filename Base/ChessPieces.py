@@ -28,15 +28,13 @@ class Paw(ChessPiece):
                     movable_tile.append(check_tile)
         self.gradePiece()
         return movable_tile
-    def phongHau(self, board):
-        board.phongHau(self)
     def makeMove(self, new_position, board):
         super().makeMove(new_position, board)
         #Kiểm tra xem phong hậu được không
         if(self.side == "White"): final_position = 7
         elif(self.side == "Black"): final_position = 0
         if(new_position[0] == final_position):
-            self.phongHau(board)
+            board.phongHau(self)
             
 class Rock(ChessPiece):
     "Xe"

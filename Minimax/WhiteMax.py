@@ -8,7 +8,7 @@ class WhiteMax():
         else: best_value = float("Inf")
         #Kiểm tra kết thúc game hoặc đến đáy
         if(board.endGame()[0] == True or depth <= 0):
-            return [board.evaluateBoard("Black"), "",""]
+            return [board.evaluateBoard("White"), "",""]
         #Xem từng nước đi một
         if(is_max == True):
             for piece in board.player_white.chess_pieces:
@@ -22,8 +22,7 @@ class WhiteMax():
                     #Đệ quy, tìm nhánh dưới
                     board_value = self.miniMax(best_value, piece_index, best_move, not is_max, 
                                                depth - 1, copy_board, alpha, beta)[0]
-                    print(board_value, end = " ")
-                    if(best_value < board_value and is_max == True): 
+                    if(best_value < board_value): 
                         best_value = board_value
                         piece_index = p_index
                         best_move = move

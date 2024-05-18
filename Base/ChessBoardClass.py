@@ -1,6 +1,9 @@
+from copy import deepcopy
 from Base.PlayerClass import BlackPlayer, WhitePlayer
 
 class ChessBoard:
+    delete_counter = 0
+
     def __init__(self):
         self.player_white = WhitePlayer()
         self.player_black = BlackPlayer()
@@ -23,11 +26,10 @@ class ChessBoard:
         "Vẽ cờ trên màn console"
         print("|")
         for i in range(0, 8):
-        #    print("__", end = " ")
+            print("__", end = " ")
             line = self.board_display[i]
             print("{:3} {:3} {:3} {:3} {:3} {:3} {:3} {:3}".format(*line), end = " ")
-        #    print("__")
-            print()
+            print("__")
         print("|")
         
     def getAllPieces(self):
@@ -50,7 +52,9 @@ class ChessBoard:
         elif(piece_symbol[1:] == "kn2"): return player.knight_2
         elif(piece_symbol[1:] == "b1"): return player.bishop_1
         elif(piece_symbol[1:] == "b2"): return player.bishop_2
-        elif(piece_symbol[1:] == "q"): return player.queen
+        elif(piece_symbol[1] == "q"): 
+            if(len(piece_symbol) == 2): return player.queen
+            else: return player.accended_paw[int(piece_symbol[2])]
         elif(piece_symbol[1:] == "K"): return player.king
 
     
@@ -64,10 +68,15 @@ class ChessBoard:
         elif(eaten_piece.side == "Black"): 
             self.player_black.chess_pieces.remove(eaten_piece)
             self.captured_black_pieces.append(eaten_piece)
+        self.delete_counter += 1
 
     def phongHau(self, piece):
-        if(piece.side == "White"): self.player_white.phongHau(piece)
-        elif(piece.side == "Black"): self.player_black.phongHau(piece)
+        if(piece.side == "White"):
+            self.board_display[piece.position[0]][piece.position[1]] = "wq" + str(len(self.player_white.accended_paw))
+            self.player_white.phongHau(piece)
+        elif(piece.side == "Black"): 
+            self.board_display[piece.position[0]][piece.position[1]] = "bq" + str(len(self.player_black.accended_paw))
+            self.player_black.phongHau(piece)
 
     def evaluateBoard(self, side):
         "Giá trị của bàn cờ dựa theo bên chơi side"
@@ -85,10 +94,48 @@ class ChessBoard:
         return [False, ""]
 
     def endGame(self):
-        "KT game kết thúc chưa, return [True/False, bên thắng]"
+        "KT game kết thúc chưa, return [True/False, bên thắng]. Chỉ kiểm tra vua đã bị ăn chưa, dùng cho hàm Minimax"
         if(self.player_black.chess_pieces.count(self.black_king) == 0):
             return [True, "White"]
         elif(self.player_white.chess_pieces.count(self.white_king) == 0):
             return [True, "Black"]
         return [False, ""]
+    
+    def gameOver(self):
+        "KT game đẫ bị checkmate chưa, dùng để kết thúc và reset ván game"
+        if(self.endGame()[0] == True): return self.endGame()
+        #Xét từng nước đi một, giống cách Minimax
+        white_lose = True
+        black_lose = True
+        for piece in self.player_white.chess_pieces:
+            movable_tile = piece.displayMovableTile(self)
+            for move in movable_tile:
+                copy_board = deepcopy(self)
+                p_index = self.player_white.chess_pieces.index(piece)
+                copy_piece = copy_board.player_white.chess_pieces[p_index]
+                #Tạo copy của bàn cờ
+                copy_piece.makeMove(move, copy_board)
+                if(copy_board.kingIsChecked()[0] == False):
+                    white_lose = False
+                if(white_lose == False): 
+                    break
+            if(white_lose == False): break
+        if(white_lose == True): return [True, "White"]
+
+        for piece in self.player_black.chess_pieces:
+            movable_tile = piece.displayMovableTile(self)
+            for move in movable_tile:
+                copy_board = deepcopy(self)
+                p_index = self.player_black.chess_pieces.index(piece)
+                #Tạo copy của bàn cờ
+                copy_piece = copy_board.player_black.chess_pieces[p_index]
+                copy_piece.makeMove(move, copy_board)
+                if(copy_board.kingIsChecked()[0] == False):
+                    return [False, ""]
+        if(black_lose == True): return [True, "Black"]
+        
+        
+            
+                
+
 

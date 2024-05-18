@@ -5,9 +5,10 @@ from Minimax.WhiteMax import WhiteMax
 
 
 class Minimax:
-    def __init__(self, maxing_player):
+    def __init__(self, maxing_player, max_depth):
         if(maxing_player == "White"): self.miniMaxer = WhiteMax()
         else: self.miniMaxer = BlackMax()
-    def miniMax(self, best_value, piece_index, best_move , is_max, depth, board = ChessBoard, alpha = float, beta = float):
-        return self.miniMaxer.miniMax(best_value, piece_index, best_move , is_max, depth, board, alpha, beta)
+        self.max_depth = max_depth
+    def miniMax(self, best_value, piece_index, best_move , is_max, board = ChessBoard, alpha = float, beta = float):
+        return self.miniMaxer.miniMax(best_value, piece_index, best_move , is_max, self.max_depth, board, alpha, beta)
         

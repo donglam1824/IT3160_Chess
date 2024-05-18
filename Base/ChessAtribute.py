@@ -47,9 +47,14 @@ class ChessPiece:
                     check_tile[1] += vector[1]
                 #Thêm tile có quân cờ địch ăn được
                 if(ChessPiece.isInTheBoard(check_tile)):
-                    block_piece = board.locatePiece(check_tile)
-                    if(block_piece.side != self.side):
-                        movable_tile.append(deepcopy(check_tile))
+                    try:
+                        block_piece = board.locatePiece(check_tile)
+                        if(block_piece.side != self.side):
+                            movable_tile.append(deepcopy(check_tile))
+                    except AttributeError:
+                        print("Error NoneType", block_piece ,board.player_white.accended_paw)
+                        board.printBoard()
+                        exit(1)
             except IndexError:
                 #Ra khỏi bàn cờ
                 continue
