@@ -104,6 +104,8 @@ class ChessBoard:
     def gameOver(self):
         "KT game đẫ bị checkmate chưa, dùng để kết thúc và reset ván game"
         if(self.endGame()[0] == True): return self.endGame()
+        white_possible_move = []
+        black_possible_move = []
         #Xét từng nước đi một, giống cách Minimax
         white_lose = True
         black_lose = True
@@ -115,12 +117,11 @@ class ChessBoard:
                 copy_piece = copy_board.player_white.chess_pieces[p_index]
                 #Tạo copy của bàn cờ
                 copy_piece.makeMove(move, copy_board)
-                if(copy_board.kingIsChecked()[0] == False):
+                checked = copy_board.kingIsChecked()
+                if(checked[0] == False or checked == [True, "Black"]):
+                    white_possible_move.append([piece ,move])
                     white_lose = False
-                if(white_lose == False): 
-                    break
-            if(white_lose == False): break
-        if(white_lose == True): return [True, "White"]
+        if(white_lose == True): return [True, "White", ""]
 
         for piece in self.player_black.chess_pieces:
             movable_tile = piece.displayMovableTile(self)
@@ -130,9 +131,12 @@ class ChessBoard:
                 #Tạo copy của bàn cờ
                 copy_piece = copy_board.player_black.chess_pieces[p_index]
                 copy_piece.makeMove(move, copy_board)
-                if(copy_board.kingIsChecked()[0] == False):
-                    return [False, ""]
-        if(black_lose == True): return [True, "Black"]
+                checked = copy_board.kingIsChecked()
+                if(checked[0] == False or checked == [True, "White"]):
+                    black_possible_move.append([piece, move])
+                    black_lose = False
+        if(black_lose == True): return [True, "Black", ""]
+        return [False, white_possible_move, black_possible_move]
         
         
             

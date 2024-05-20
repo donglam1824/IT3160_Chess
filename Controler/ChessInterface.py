@@ -20,7 +20,6 @@ class Interface:
         self.timer = pygame.time.Clock()
         self.board = board
         self.counter = 0
-        self.turn_step = 0
         """Trạng thái bàn cờ theo các giá trị: 
         0: Bên White, chưa chọn quân
         1: Bên White, chuẩn bị đi
@@ -46,7 +45,7 @@ class Interface:
         status_text = ['Trắng đang chọn quân', 'Trắng đang chọn nước đi',
                         'Đen đang chọn quân', 'Đen đang chọn nước đi']
         #hiện text tương ứng với trạng thái 
-        self.screen.blit(self.big_font.render(status_text[self.turn_step], True, 'black'), (20, 820))
+#        self.screen.blit(self.big_font.render(status_text[self.turn_step], True, 'black'), (20, 820))
             
         for i in range(9):
                 pygame.draw.line(self.screen, 'black', (0, 100 * i), (800, 100 * i), 2)
@@ -79,9 +78,9 @@ class Interface:
                     
     
     # vẽ nước hợp lệ trên bàn cờ và quân cờ đang được chọn
-    def draw_valid(self, moves ,choosen_piece):
+    def draw_valid(self, moves ,choosen_piece, turn_step):
         if type(choosen_piece) is not str:
-            if self.turn_step < 2:
+            if turn_step < 2:
                 color = 'red'
                 pygame.draw.rect(self.screen, 'red', 
                                 [choosen_piece.position[1] * 100 + 1, choosen_piece.position[0] * 100 + 1, 100, 100], 2)
