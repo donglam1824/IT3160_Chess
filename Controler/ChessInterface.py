@@ -8,8 +8,6 @@ class Interface:
     HEIGHT = 800
     fps = 60
     selection = 100
-    captured_white_pieces = []
-    captured_black_pieces = []
     
     def __init__(self, board = ChessBoard):
         pygame.init()
@@ -22,7 +20,6 @@ class Interface:
         self.timer = pygame.time.Clock()
         self.board = board
         self.counter = 0
-        self.turn_step = 0
         """Trạng thái bàn cờ theo các giá trị: 
         0: Bên White, chưa chọn quân
         1: Bên White, chuẩn bị đi
@@ -48,7 +45,7 @@ class Interface:
         status_text = ['Trắng đang chọn quân', 'Trắng đang chọn nước đi',
                         'Đen đang chọn quân', 'Đen đang chọn nước đi']
         #hiện text tương ứng với trạng thái 
-        self.screen.blit(self.big_font.render(status_text[self.turn_step], True, 'black'), (20, 820))
+#        self.screen.blit(self.big_font.render(status_text[self.turn_step], True, 'black'), (20, 820))
             
         for i in range(9):
                 pygame.draw.line(self.screen, 'black', (0, 100 * i), (800, 100 * i), 2)
@@ -81,9 +78,9 @@ class Interface:
                     
     
     # vẽ nước hợp lệ trên bàn cờ và quân cờ đang được chọn
-    def draw_valid(self, moves ,choosen_piece):
+    def draw_valid(self, moves ,choosen_piece, turn_step):
         if type(choosen_piece) is not str:
-            if self.turn_step < 2:
+            if turn_step < 2:
                 color = 'red'
                 pygame.draw.rect(self.screen, 'red', 
                                 [choosen_piece.position[1] * 100 + 1, choosen_piece.position[0] * 100 + 1, 100, 100], 2)
@@ -97,20 +94,21 @@ class Interface:
     # vẽ quân bắt được ở cạnh bàn cờ
     def draw_captured(self):
         image = PieceImage()
-        for i in range(len(self.captured_white_pieces)):
-            captured_piece = self.captured_white_pieces[i]
-            index = image.piece_list.index(captured_piece)
-            self.screen.blit(image.small_black_images[index], (825, 5 + 50 * i))
-        for i in range(len(self.captured_black_pieces)):
-            captured_piece = self.captured_black_pieces[i]
-            index = image.piece_list.index(captured_piece)
-            image.screen.blit(image.small_white_images[index], (925, 5 + 50 * i))
+        count = 0
+        for piece in self.board.captured_white_pieces:
+            index = image.piece_list.index(piece.name)
+            self.screen.blit(image.small_white_images[index], (825, 5 + 50 * count))
+            count += 1
+        count = 0
+        for piece in self.board.captured_black_pieces:
+            index = image.piece_list.index(piece.name)
+            self.screen.blit(image.small_black_images[index], (925, 5 + 50 * count))
+            count += 1
 
 
     # ô vua nhấp nháy nếu bị chiếu
-    def draw_check(self):
-        image = PieceImage()
-        if self.turn_step < 2:
+    def draw_check(self, side):
+        if side == "White":
             king_location = self.board.player_white.king.position
         else:
             king_location = self.board.player_black.king.position

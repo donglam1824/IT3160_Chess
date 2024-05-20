@@ -5,6 +5,7 @@ class Player:
     def __init__(self, h, h_paw, side):
         self.paws = []
         self.side = side
+        self.accended_paw = []
         for i in range(0, 8):
             paw_piece = Paw([h_paw, i], side)
             self.paws.append(paw_piece)
@@ -16,7 +17,8 @@ class Player:
         self.bishop_2 = Bishop([h, 5], side)
         self.queen = Queen([h, 3], side)
         self.king = King([h, 4], side)
-        self.chess_pieces = self.paws
+        self.chess_pieces = []
+        self.chess_pieces.extend(self.paws)
         self.chess_pieces.extend([self.rock_1, self.rock_2, self.bishop_1, self.bishop_2, 
                                   self.knight_1, self.knight_2, self.queen, self.king])
     def initalizePieces(self, board):
@@ -31,6 +33,7 @@ class Player:
         new_queen = Queen(piece.position, piece.side)
         self.chess_pieces.remove(piece)
         self.chess_pieces.append(new_queen)
+        self.accended_paw.append(new_queen)
     def evaluateBoard(self):
         value = 0
         for piece in self.chess_pieces:
