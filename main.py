@@ -8,10 +8,18 @@ from Controler.Controller import Controller  # Nhập lớp Controller của b�
 def main():
     pygame.init()
 
-    screen = pygame.display.set_mode((1000,800))  # Kích thước cửa sổ menu
+    screen_width, screen_height = 1000, 800
+    screen = pygame.display.set_mode((screen_width, screen_height))  # Kích thước cửa sổ menu
     pygame.display.set_caption("Chọn Chế Độ Chơi Cờ")
-
+    original_background_image = pygame.image.load("Chess_Image\Menu.jpg").convert()
+    background_image = pygame.transform.scale(original_background_image, (screen_width, screen_height))
     font = pygame.font.SysFont(None, 30)
+    button_color = (165, 42, 42)  # Màu nâu đỏ
+    button_hover_color = (139, 0, 0)  # Màu nâu đậm
+    button_border_color = (0, 0, 0)  # Màu đen
+    text_color = (255, 255, 255)  # Màu trắng
+    border_width = 2
+    corner_radius = 10
 
     # Các nút chọn chế độ chơi
     buttons = [
@@ -34,10 +42,22 @@ def main():
                         controller = Controller(button["AI"][0], button["AI"][1])
                         running = False  # Thoát khỏi vòng lặp menu
                         break  # Thoát khỏi vòng lặp duyệt nút
+        
+        if (controller == None):
+            screen.blit(background_image, (0, 0))
+
 
         for button in buttons:
-            pygame.draw.rect(screen, (0, 0, 255), button["rect"])  # Vẽ nút màu xanh
-            text_surface = font.render(button["text"], True, (255, 255, 255))  # Màu chữ trắng
+        # Hiệu ứng hover
+            if button["rect"].collidepoint(pygame.mouse.get_pos()):
+                pygame.draw.rect(screen, button_hover_color, button["rect"], border_radius=corner_radius)
+            else:
+                pygame.draw.rect(screen, button_color, button["rect"], border_radius=corner_radius)
+
+            # Viền nút
+            pygame.draw.rect(screen, button_border_color, button["rect"], border_width, border_radius=corner_radius)
+            # Chữ trên nút
+            text_surface = font.render(button["text"], True, text_color)  # Màu chữ trắng
             text_rect = text_surface.get_rect(center=button["rect"].center)
             screen.blit(text_surface, text_rect)
 
