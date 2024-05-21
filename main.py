@@ -5,6 +5,7 @@ from Base.ChessBoard import ChessBoard
 from Controller.Interface import Interface
 from Controller.Controller import Controller
 from soundgame import SoundManager
+import pygame
 
 def main():
     pygame.init()
