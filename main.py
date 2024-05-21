@@ -4,12 +4,14 @@ from Minimax.MiniMaxClass import Minimax
 from Base.ChessBoard import ChessBoard
 from Controller.Interface import Interface
 from Controller.Controller import Controller
+from soundgame import SoundManager
 
 def main():
     pygame.init()
     icon = pygame.image.load("Chess_Image\icon.jpg")
     pygame.display.set_icon(icon)
-
+    sound_manager = SoundManager()
+    sound_manager.play_background_music(-1)
     screen_width, screen_height = 1000, 800
     screen = pygame.display.set_mode((screen_width, screen_height))  # Kích thước cửa sổ menu
     pygame.display.set_caption("Chọn Chế Độ Chơi")
