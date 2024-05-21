@@ -22,6 +22,7 @@ class ChessBoard:
         self.white_king = self.player_white.king
         self.captured_white_pieces = []
         self.captured_black_pieces = []
+        self.last_captured_piece = None
     def printBoard(self):
         "Vẽ cờ trên màn console"
         print("|")
@@ -68,8 +69,13 @@ class ChessBoard:
         elif(eaten_piece.side == "Black"): 
             self.player_black.chess_pieces.remove(eaten_piece)
             self.captured_black_pieces.append(eaten_piece)
+        self.last_captured_piece = eaten_piece
         self.delete_counter += 1
 
+    def pieceJustCaptured(self):
+        """Checks if a piece was captured in the most recent move."""
+        return self.last_captured_piece is not None
+    
     def phongHau(self, piece):
         if(piece.side == "White"):
             self.board_display[piece.position[0]][piece.position[1]] = "wq" + str(len(self.player_white.accended_paw))
