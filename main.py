@@ -8,17 +8,17 @@ from Controler.Controller import Controller  # Nhập lớp Controller của b�
 def main():
     pygame.init()
 
-    screen = pygame.display.set_mode((400, 360))  # Kích thước cửa sổ menu
+    screen = pygame.display.set_mode((1000,800))  # Kích thước cửa sổ menu
     pygame.display.set_caption("Chọn Chế Độ Chơi Cờ")
 
     font = pygame.font.SysFont(None, 30)
 
     # Các nút chọn chế độ chơi
     buttons = [
-        {"text": "Player vs Player", "rect": pygame.Rect(100, 50, 200, 50), "AI": (False, False)},
-        {"text": "Player vs Bot", "rect": pygame.Rect(100, 120, 200, 50), "AI": (False, True)},
-        {"text": "Bot vs Player", "rect": pygame.Rect(100, 190, 200, 50), "AI": (True, False)},
-        {"text": "Bot vs Bot", "rect": pygame.Rect(100, 260, 200, 50), "AI": (True, True)}
+        {"text": "Player vs Player", "rect": pygame.Rect(400, 200, 200, 50), "AI": (False, False)},
+        {"text": "Player vs Bot", "rect": pygame.Rect(400, 320, 200, 50), "AI": (False, True)},
+        {"text": "Bot vs Player", "rect": pygame.Rect(400, 440, 200, 50), "AI": (True, False)},
+        {"text": "Bot vs Bot", "rect": pygame.Rect(400, 560, 200, 50), "AI": (True, True)}
     ]
 
     running = True
