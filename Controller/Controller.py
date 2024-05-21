@@ -1,5 +1,4 @@
 from copy import deepcopy
-import pygame
 from Base.ChessBoard import ChessBoard
 from Controller.Interface import Interface
 from Minimax.MiniMaxClass import Minimax
@@ -8,11 +7,11 @@ from Minimax.MiniMaxClass import Minimax
 class Controller:
     minimax_black = Minimax("Black", 3)
     minimax_white = Minimax("White", 2)
-    def __init__(self):
+    def __init__(self, enable_white_AI: bool, enable_black_AI: bool):
         self.white_AI = False
         self.black_AI = False
         self.possible_move = [[], []]
-        self.makeNewGame(True, False, 3, 3)
+        self.makeNewGame(enable_white_AI, enable_black_AI, 3, 3)
         self.movable_tile = []
         self.choosen_piece = ""
         self.king_is_checked = [False, ""]
@@ -27,6 +26,7 @@ class Controller:
         self.king_is_checked = [False, ""]
         self.game_ended = self.board.gameCondition()
         self.possible_move = [self.game_ended[1], self.game_ended[2]]
+
         if(enable_white_AI == True): 
             self.white_AI = True
             self.minimax_white.updateDepth(max_depth_black)
