@@ -2,9 +2,11 @@ from copy import deepcopy
 from Base.ChessBoard import ChessBoard
 from Controller.Interface import Interface
 from Minimax.MiniMaxClass import Minimax
+from soundgame import SoundManager
 
 
 class Controller:
+    sound_manager = SoundManager()
     minimax_black = Minimax("Black", 3)
     minimax_white = Minimax("White", 2)
     def __init__(self, enable_white_AI: bool, enable_black_AI: bool):
@@ -59,6 +61,7 @@ class Controller:
                 self.choosen_piece.makeMove(click_coords ,self.board)
                 self.turn_step = 2
                 self.onMove()
+                self.sound_manager.play_move_sound ()
                 return
             if(self.turn_step <= 1):
                 #Turn của bên White đi
@@ -82,6 +85,7 @@ class Controller:
                 self.choosen_piece.makeMove(click_coords ,self.board)
                 self.turn_step = 0
                 self.onMove()
+                self.sound_manager.play_move_sound ()
                 return
             if(self.turn_step <= 3 and self.turn_step > 1):
                 #Turn của bên White đi
@@ -106,12 +110,14 @@ class Controller:
             self.board.player_white.chess_pieces[best[1]].makeMove(best[2], self.board)
             self.turn_step = 2
             self.onMove()
+            self.sound_manager.play_move_sound ()
             return
         if(self.turn_step > 1 and self.turn_step <= 3 and self.black_AI == True):
             best = self.minimax_black.miniMax(0, "", "", True, self.board, -float("Inf"), float("Inf"))
             self.board.player_black.chess_pieces[best[1]].makeMove(best[2], self.board)
             self.turn_step = 0
             self.onMove()
+            self.sound_manager.play_move_sound ()
             return
     
     def onMove(self):
@@ -121,5 +127,3 @@ class Controller:
         self.game_ended = self.board.gameCondition()
         if(self.game_ended[0] == False): 
             self.possible_move = [self.game_ended[1], self.game_ended[2]]
-
-
