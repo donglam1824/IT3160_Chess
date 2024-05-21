@@ -2,12 +2,17 @@ from copy import deepcopy
 from Base.ChessBoard import ChessBoard
 from Controller.Interface import Interface
 from Minimax.MiniMaxClass import Minimax
+import pygame
 
 
 class Controller:
     minimax_black = Minimax("Black", 3)
     minimax_white = Minimax("White", 2)
     def __init__(self, enable_white_AI: bool, enable_black_AI: bool):
+        pygame.mixer.init()
+        self.move_sound = pygame.mixer.Sound('Chess_Image/chess_move.mp3')
+        self.capture_sound = pygame.mixer.Sound('Chess_Image/chess_capture.mp3')
+        self.check_sound = pygame.mixer.Sound('Chess_Image/check.mp3')
         self.white_AI = False
         self.black_AI = False
         self.possible_move = [[], []]
@@ -121,5 +126,12 @@ class Controller:
         self.game_ended = self.board.gameCondition()
         if(self.game_ended[0] == False): 
             self.possible_move = [self.game_ended[1], self.game_ended[2]]
+        if self.board.pieceJustCaptured():  # Kiểm tra trực tiếp, không cần qua biến tạm
+            self.capture_sound.play()
+            self.board.last_captured_piece = None   # Reset last_captured_piece
+        elif self.king_is_checked[0]:  
+            self.check_sound.play()
+        else:
+            self.move_sound.play()
 
 
