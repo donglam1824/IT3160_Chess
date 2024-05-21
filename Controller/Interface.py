@@ -1,6 +1,6 @@
 import pygame
-from Base.ChessBoardClass import ChessBoard
-from Base.PiecePicture import PieceImage
+from Base.ChessBoard import ChessBoard
+from Base.PieceImage import PieceImage
 
 class Interface:
     "Vẽ dao diện cho game"

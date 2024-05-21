@@ -1,5 +1,5 @@
 from copy import deepcopy
-from Base.PlayerClass import BlackPlayer, WhitePlayer
+from Base.Player import BlackPlayer, WhitePlayer
 
 class ChessBoard:
     delete_counter = 0
@@ -101,8 +101,8 @@ class ChessBoard:
             return [True, "Black"]
         return [False, ""]
     
-    def gameOver(self):
-        "KT game đẫ bị checkmate chưa, dùng để kết thúc và reset ván game"
+    def gameCondition(self):
+        "KT các nước đi còn đi được của 2 bên, nếu hết nước đi thì game sẽ end"
         if(self.endGame()[0] == True): return self.endGame()
         white_possible_move = []
         black_possible_move = []

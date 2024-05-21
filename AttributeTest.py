@@ -1,4 +1,4 @@
-from Base.ChessBoardClass import ChessBoard
+from Base.ChessBoard import ChessBoard
 from Minimax.MiniMaxClass import Minimax
 import time
 
@@ -17,7 +17,7 @@ board.player_white.queen.makeMove([3,4], board)
 
 
 board.printBoard()
-print(board.gameOver())
+print(board.gameCondition())
 
 
 

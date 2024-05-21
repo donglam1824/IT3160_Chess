@@ -5,7 +5,7 @@ class Player:
     def __init__(self, h, h_paw, side):
         self.paws = []
         self.side = side
-        self.accended_paw = []
+        self.accended_paw = [] #Dành cho Tốt đươch tăng cấp
         for i in range(0, 8):
             paw_piece = Paw([h_paw, i], side)
             self.paws.append(paw_piece)

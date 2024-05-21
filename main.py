@@ -1,9 +1,9 @@
 import pygame
 
 from Minimax.MiniMaxClass import Minimax
-from Base.ChessBoardClass import ChessBoard
-from Controler.ChessInterface import Interface
-from Controler.Controller import Controller
+from Base.ChessBoard import ChessBoard
+from Controller.Interface import Interface
+from Controller.Controller import Controller
 
 controller = Controller()
 pygame.display.flip()

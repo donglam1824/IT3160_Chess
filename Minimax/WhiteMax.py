@@ -1,4 +1,4 @@
-from Base.ChessBoardClass import ChessBoard
+from Base.ChessBoard import ChessBoard
 from copy import deepcopy
 
 class WhiteMax():

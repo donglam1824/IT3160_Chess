@@ -1,4 +1,4 @@
-from Base.ChessAtribute import ChessPiece
+from Base.PieceAtribute import ChessPiece
 from copy import deepcopy
 
 class Paw(ChessPiece):

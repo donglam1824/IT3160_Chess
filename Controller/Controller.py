@@ -1,7 +1,7 @@
 from copy import deepcopy
 import pygame
-from Base.ChessBoardClass import ChessBoard
-from Controler.ChessInterface import Interface
+from Base.ChessBoard import ChessBoard
+from Controller.Interface import Interface
 from Minimax.MiniMaxClass import Minimax
 
 
@@ -12,11 +12,12 @@ class Controller:
         self.white_AI = False
         self.black_AI = False
         self.possible_move = [[], []]
-        self.makeNewGame(False, False, 3, 3)
+        self.makeNewGame(True, False, 3, 3)
         self.movable_tile = []
         self.choosen_piece = ""
         self.king_is_checked = [False, ""]
         self.turn_step = 0
+    
     def makeNewGame(self, enable_white_AI : bool, enable_black_AI: bool, 
                     max_depth_white : int, max_depth_black : int):
         "Tạo game mới, có thể lựa chọn AI cho 2 bên"
@@ -24,7 +25,7 @@ class Controller:
         self.interface = Interface(self.board)
         self.run = True
         self.king_is_checked = [False, ""]
-        self.game_ended = self.board.gameOver()
+        self.game_ended = self.board.gameCondition()
         self.possible_move = [self.game_ended[1], self.game_ended[2]]
         if(enable_white_AI == True): 
             self.white_AI = True
@@ -117,7 +118,7 @@ class Controller:
         "Khi người chơi thực hiện di chuyển"
         self.movable_tile = []
         self.king_is_checked = self.board.kingIsChecked()
-        self.game_ended = self.board.gameOver()
+        self.game_ended = self.board.gameCondition()
         if(self.game_ended[0] == False): 
             self.possible_move = [self.game_ended[1], self.game_ended[2]]
 

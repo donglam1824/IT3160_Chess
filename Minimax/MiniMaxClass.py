@@ -1,5 +1,5 @@
 from copy import deepcopy
-from Base.ChessBoardClass import ChessBoard
+from Base.ChessBoard import ChessBoard
 from Minimax.BlackMax import BlackMax
 from Minimax.WhiteMax import WhiteMax
 
