@@ -7,11 +7,13 @@ from Controler.Controller import Controller  # Nhập lớp Controller của b�
 
 def main():
     pygame.init()
+    icon = pygame.image.load("Chess_Image\icon.jpg")
+    pygame.display.set_icon(icon)
 
     screen_width, screen_height = 1000, 800
     screen = pygame.display.set_mode((screen_width, screen_height))  # Kích thước cửa sổ menu
-    pygame.display.set_caption("Chọn Chế Độ Chơi Cờ")
-    original_background_image = pygame.image.load("Chess_Image\Menu.jpg").convert()
+    pygame.display.set_caption("Chọn Chế Độ Chơi")
+    original_background_image = pygame.image.load(r"Chess_Image\Menu.jpg").convert()
     background_image = pygame.transform.scale(original_background_image, (screen_width, screen_height))
     font = pygame.font.SysFont(None, 30)
     button_color = (165, 42, 42)  # Màu nâu đỏ
