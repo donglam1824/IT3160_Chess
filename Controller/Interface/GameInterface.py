@@ -2,7 +2,7 @@ import pygame
 from Base.ChessBoard import ChessBoard
 from Base.PieceImage import PieceImage
 
-class Interface:
+class GameInterface:
     "Vẽ dao diện cho game"
     WIDTH = 1000    #kich thuoc man hinh
     HEIGHT = 800

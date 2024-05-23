@@ -1,8 +1,8 @@
 from copy import deepcopy
 from Base.ChessBoard import ChessBoard
-from Controller.Interface import Interface
+from Controller.Interface.GameInterface import GameInterface
 from Minimax.MiniMaxClass import Minimax
-from soundgame import SoundManager
+from Controller.Interface.SoundGame import SoundManager
 import pygame
 
 
@@ -12,9 +12,6 @@ class Controller:
     minimax_white = Minimax("White", 2)
     def __init__(self, enable_white_AI: bool, enable_black_AI: bool):
         pygame.mixer.init()
-        self.move_sound = pygame.mixer.Sound('Chess_Image/chess_move.mp3')
-        self.capture_sound = pygame.mixer.Sound('Chess_Image/chess_capture.mp3')
-        self.check_sound = pygame.mixer.Sound('Chess_Image/check.mp3')
         self.white_AI = False
         self.black_AI = False
         self.possible_move = [[], []]
@@ -28,11 +25,11 @@ class Controller:
                     max_depth_white : int, max_depth_black : int):
         "Tạo game mới, có thể lựa chọn AI cho 2 bên"
         self.board = ChessBoard()
-        self.interface = Interface(self.board)
+        self.interface = GameInterface(self.board)
         self.run = True
         self.king_is_checked = [False, ""]
-        self.game_ended = self.board.gameCondition()
-        self.possible_move = [self.game_ended[1], self.game_ended[2]]
+        self.game_ended = [False, ""]
+        self.possible_move = self.board.getPossibleMove()
 
         if(enable_white_AI == True): 
             self.white_AI = True
@@ -48,7 +45,7 @@ class Controller:
         self.interface.draw_pieces()
         self.interface.draw_valid(self.movable_tile, self.choosen_piece, self.turn_step)
         if(self.king_is_checked[0] == True): self.interface.draw_check(self.king_is_checked[1])
-        if(self.game_ended[0] == True): self.interface.draw_game_over(self.game_ended[1])
+        if(self.game_ended[0] == True): self.interface.draw_game_over(self.game_condition[1])
 
         self.aiMakeMove()
         self.interface.draw_captured()
@@ -59,6 +56,8 @@ class Controller:
     
     def onClick(self, click_coords):
         "Khi người chơi click chuột chọn nước đi"
+        if(click_coords[0] not in range(0, 8) or click_coords[1] not in range(0, 8)):
+            return
         if(self.white_AI == False):
             #Luợt của bên White
             if(self.turn_step == 1 and click_coords in self.movable_tile):
@@ -66,7 +65,6 @@ class Controller:
                 self.choosen_piece.makeMove(click_coords ,self.board)
                 self.turn_step = 2
                 self.onMove()
-                self.sound_manager.play_move_sound ()
                 return
             if(self.turn_step <= 1):
                 #Turn của bên White đi
@@ -90,7 +88,6 @@ class Controller:
                 self.choosen_piece.makeMove(click_coords ,self.board)
                 self.turn_step = 0
                 self.onMove()
-                self.sound_manager.play_move_sound ()
                 return
             if(self.turn_step <= 3 and self.turn_step > 1):
                 #Turn của bên White đi
@@ -115,27 +112,27 @@ class Controller:
             self.board.player_white.chess_pieces[best[1]].makeMove(best[2], self.board)
             self.turn_step = 2
             self.onMove()
-            self.sound_manager.play_move_sound ()
             return
         if(self.turn_step > 1 and self.turn_step <= 3 and self.black_AI == True):
             best = self.minimax_black.miniMax(0, "", "", True, self.board, -float("Inf"), float("Inf"))
             self.board.player_black.chess_pieces[best[1]].makeMove(best[2], self.board)
             self.turn_step = 0
             self.onMove()
-            self.sound_manager.play_move_sound ()
             return
     
     def onMove(self):
         "Khi người chơi thực hiện di chuyển"
         self.movable_tile = []
-        self.king_is_checked = self.board.kingIsChecked()
-        self.game_ended = self.board.gameCondition()
-        if(self.game_ended[0] == False): 
-            self.possible_move = [self.game_ended[1], self.game_ended[2]]
+        self.king_is_checked = self.board.getCheckedKing()
+        self.possible_move = self.board.getPossibleMove()
+        if(len(self.possible_move[0]) == 0): self.game_ended = [True, "White"]
+        elif(len(self.possible_move[1]) == 0): self.game_ended = [True, "Black"]
+        self.sound_manager.playMoveSound()
+
         if self.board.pieceJustCaptured():  # Kiểm tra trực tiếp, không cần qua biến tạm
-            self.capture_sound.play()
+            self.sound_manager.capture_sound.play()
             self.board.last_captured_piece = None  # Reset last_captured_piece
         elif self.king_is_checked[0]:
-            self.check_sound.play()
+            self.sound_manager.check_sound.play()
         else:
-            self.move_sound.play()
+            self.sound_manager.move_sound.play()

@@ -77,6 +77,7 @@ class ChessBoard:
         return self.last_captured_piece is not None
     
     def phongHau(self, piece):
+        "Thực hiện phong Hậu"
         if(piece.side == "White"):
             self.board_display[piece.position[0]][piece.position[1]] = "wq" + str(len(self.player_white.accended_paw))
             self.player_white.phongHau(piece)
@@ -89,7 +90,7 @@ class ChessBoard:
         if(side == "White"): return self.player_white.evaluateBoard() - self.player_black.evaluateBoard()
         elif(side == "Black"): return self.player_black.evaluateBoard() - self.player_white.evaluateBoard()
 
-    def kingIsChecked(self):
+    def getCheckedKing(self):
         "KT xem vua có đang bị chiếu không, nếu có trả về bên bị chiếu"
         for piece in self.player_black.chess_pieces:
             if(piece.displayMovableTile(self).count(self.white_king.position) > 0):
@@ -97,6 +98,7 @@ class ChessBoard:
         for piece in self.player_white.chess_pieces:
             if(piece.displayMovableTile(self).count(self.black_king.position) > 0):
                 return [True, "Black"]
+            
         return [False, ""]
 
     def endGame(self):
@@ -107,11 +109,12 @@ class ChessBoard:
             return [True, "Black"]
         return [False, ""]
     
-    def gameCondition(self):
+    def getPossibleMove(self):
         "KT các nước đi còn đi được của 2 bên, nếu hết nước đi thì game sẽ end"
         if(self.endGame()[0] == True): return self.endGame()
         white_possible_move = []
         black_possible_move = []
+        current_checked_king = self.getCheckedKing()
         #Xét từng nước đi một, giống cách Minimax
         white_lose = True
         black_lose = True
@@ -123,11 +126,10 @@ class ChessBoard:
                 copy_piece = copy_board.player_white.chess_pieces[p_index]
                 #Tạo copy của bàn cờ
                 copy_piece.makeMove(move, copy_board)
-                checked = copy_board.kingIsChecked()
-                if(checked[0] == False or checked == [True, "Black"]):
+                checked_king = copy_board.getCheckedKing()
+                if(checked_king[0] == False or (checked_king == [True, "Black"] and current_checked_king != [True, "White"])):
                     white_possible_move.append([piece ,move])
                     white_lose = False
-        if(white_lose == True): return [True, "White", ""]
 
         for piece in self.player_black.chess_pieces:
             movable_tile = piece.displayMovableTile(self)
@@ -137,12 +139,12 @@ class ChessBoard:
                 #Tạo copy của bàn cờ
                 copy_piece = copy_board.player_black.chess_pieces[p_index]
                 copy_piece.makeMove(move, copy_board)
-                checked = copy_board.kingIsChecked()
-                if(checked[0] == False or checked == [True, "White"]):
+                checked_king = copy_board.getCheckedKing()
+                if(checked_king[0] == False or (checked_king == [True, "White"]  and current_checked_king != [True, "Black"])):
                     black_possible_move.append([piece, move])
                     black_lose = False
-        if(black_lose == True): return [True, "Black", ""]
-        return [False, white_possible_move, black_possible_move]
+
+        return [white_possible_move, black_possible_move]
         
         
             
