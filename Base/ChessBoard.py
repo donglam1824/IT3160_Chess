@@ -7,14 +7,14 @@ class ChessBoard:
     def __init__(self):
         self.player_white = WhitePlayer()
         self.player_black = BlackPlayer()
-        self.board_display = [["wr1", "wkn1", "wb1", "wq", "wK", "wb2", "wkn2", "wr2"],
-                            ["wp0", "wp1", "wp2", "wp3", "wp4", "wp5", "wp6", "wp7"],
-                            ["0",   "0",   "0",   "0",   "0",   "0",   "0",   "0"],
-                            ["0",   "0",   "0",   "0",   "0",   "0",   "0",   "0"],
-                            ["0",   "0",   "0",   "0",   "0",   "0",   "0",   "0"],
-                            ["0",   "0",   "0",   "0",   "0",   "0",   "0",   "0"],
+        self.board_display = [["br1", "bkn1", "bb1", "bq", "bK", "bb2", "bkn2", "br2"],
                             ["bp0", "bp1", "bp2", "bp3", "bp4", "bp5", "bp6", "bp7"],
-                            ["br1", "bkn1", "bb1", "bq", "bK", "bb2", "bkn2", "br2",]]
+                            ["0",   "0",   "0",   "0",   "0",   "0",   "0",   "0"],
+                            ["0",   "0",   "0",   "0",   "0",   "0",   "0",   "0"],
+                            ["0",   "0",   "0",   "0",   "0",   "0",   "0",   "0"],
+                            ["0",   "0",   "0",   "0",   "0",   "0",   "0",   "0"],
+                            ["wp0", "wp1", "wp2", "wp3", "wp4", "wp5", "wp6", "wp7"],
+                            ["wr1", "wkn1", "wb1", "wq", "wK", "wb2", "wkn2", "wr2",]]
         #Make a new chess board
         self.player_black.initalizePieces(self)
         self.player_white.initalizePieces(self)

@@ -42,8 +42,8 @@ class Player:
         
 class BlackPlayer(Player):
     def __init__(self):
-        super().__init__(7, 6, "Black")
+        super().__init__(0, 1, "Black")
         
 class WhitePlayer(Player):
     def __init__(self):
-        super().__init__(0, 1, "White")
+        super().__init__(7, 6, "White")

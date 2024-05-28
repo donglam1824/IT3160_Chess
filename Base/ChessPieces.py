@@ -8,8 +8,8 @@ class Paw(ChessPiece):
         
         #KT di chuyển chưa
     def displayMovableTile(self, board):
-        if(self.side == "White"): move_vector = 1
-        elif(self.side == "Black"): move_vector = -1
+        if(self.side == "White"): move_vector = -1
+        elif(self.side == "Black"): move_vector = 1
         movable_tile = []
         if(self.has_moved == False):
             for pos in [self.position[0] + move_vector*1, self.position[0] + move_vector*2]:
@@ -31,8 +31,8 @@ class Paw(ChessPiece):
     def makeMove(self, new_position, board):
         super().makeMove(new_position, board)
         #Kiểm tra xem phong hậu được không
-        if(self.side == "White"): final_position = 7
-        elif(self.side == "Black"): final_position = 0
+        if(self.side == "White"): final_position = 0
+        elif(self.side == "Black"): final_position = 7
         if(new_position[0] == final_position):
             board.phongHau(self)
             

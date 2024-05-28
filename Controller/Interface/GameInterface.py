@@ -116,10 +116,15 @@ class GameInterface:
             pygame.draw.rect(self.screen, 'dark red', [king_location[1] * 100 + 1,
                         king_location[0] * 100 + 1, 100, 100], 5)
 
-    def draw_game_over(self, winner):
+    def draw_game_over(self, loser):
         "Vẽ màn hình kết thúc"
         pygame.draw.rect(self.screen, 'black', [200, 200, 400, 70])
-        self.screen.blit(self.font.render(f'{winner} giành chiến thắng!', True, 'white'), (210, 210))
+        if(loser == "White"): winner = "Black"
+        elif(loser == "Black"): winner = "White"
+        if(loser == "Draw"):
+            self.screen.blit(self.font.render(f'The game ended with a Draw', True, 'white'), (210, 210))
+        else:
+            self.screen.blit(self.font.render(f'{winner} is the winner', True, 'white'), (210, 210))
         self.screen.blit(self.font.render(f'Press ENTER to Restart!',True, 'white'), (210, 240))
         
 
