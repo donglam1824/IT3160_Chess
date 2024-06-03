@@ -1,5 +1,5 @@
 class EvaluatePiece:
-    pawn_black =[
+    pawn_white =[
             [0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0],
             [5.0,  5.0,  5.0,  5.0,  5.0,  5.0,  5.0,  5.0],
             [1.0,  1.0,  2.0,  3.0,  3.0,  2.0,  1.0,  1.0],
@@ -21,7 +21,7 @@ class EvaluatePiece:
             [-5.0, -4.0, -3.0, -3.0, -3.0, -3.0, -4.0, -5.0]
             ]
 
-    bishop_black = [
+    bishop_white = [
             [ -2.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -2.0],
             [ -1.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -1.0],
             [ -1.0,  0.0,  0.5,  1.0,  1.0,  0.5,  0.0, -1.0],
@@ -32,7 +32,7 @@ class EvaluatePiece:
             [ -2.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -2.0]
         ]
 
-    rock_black = [
+    rock_white = [
             [  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0],
             [  0.5,  1.0,  1.0,  1.0,  1.0,  1.0,  1.0,  0.5],
             [ -0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5],
@@ -54,7 +54,7 @@ class EvaluatePiece:
             [ -2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.0, -2.0]
         ]
 
-    king_black_early = [
+    king_white_early = [
             [ -3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
             [ -3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
             [ -3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
@@ -64,7 +64,7 @@ class EvaluatePiece:
             [  2.0,  2.0,  0.0,  0.0,  0.0,  0.0,  2.0,  2.0 ],
             [  2.0,  3.0,  1.0,  0.0,  0.0,  1.0,  3.0,  2.0 ]]
 
-    king_black_late = [
+    king_white_late = [
             [ -5, -4, -3, -2, -2, -3, -4, -5],
             [ -3, -2, -1,  0,  0, -1, -2, -3],
             [ -3, -1,  2,  3,  3,  2, -1, -3],
@@ -84,11 +84,11 @@ class EvaluatePiece:
         need_reverse = True
         score_table = []
         if(name == "Pawn"): 
-            score_table = EvaluatePiece.pawn_black
+            score_table = EvaluatePiece.pawn_white
         elif(name == "Rock"):
-            score_table = EvaluatePiece.rock_black
+            score_table = EvaluatePiece.rock_white
         elif(name == "Bishop"):
-            score_table = EvaluatePiece.bishop_black
+            score_table = EvaluatePiece.bishop_white
         elif(name == "Knight"):
             score_table = EvaluatePiece.knight
             need_reverse = False
@@ -96,8 +96,8 @@ class EvaluatePiece:
             score_table = EvaluatePiece.queen
             need_reverse = False
         elif(name == "King"):
-            score_table = EvaluatePiece.king_black_early
-        if(need_reverse == False or side == "Black"):
+            score_table = EvaluatePiece.king_white_early
+        if(need_reverse == False or side == "White"):
             return score_table
-        if(side == "White"):
+        if(side == "Black"):
             return EvaluatePiece.reverseTable(score_table)

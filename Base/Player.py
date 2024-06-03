@@ -29,7 +29,6 @@ class Player:
         self.king.rock_2 = self.rock_2
     def phongHau(self, piece = Paw):
         "Tiến hành phong hậu cho tốt"
-        index = self.chess_pieces.index(piece)
         new_queen = Queen(piece.position, piece.side)
         self.chess_pieces.remove(piece)
         self.chess_pieces.append(new_queen)
@@ -39,6 +38,9 @@ class Player:
         for piece in self.chess_pieces:
             value += piece.value
         return value
+    def getOppositeSide(side):
+        if(side == "White"): return "Black"
+        else: return "White"
         
 class BlackPlayer(Player):
     def __init__(self):

@@ -14,8 +14,9 @@ class Controller:
         pygame.mixer.init()
         self.white_AI = False
         self.black_AI = False
-        self.possible_move = [[], []]
-        self.makeNewGame(enable_white_AI, enable_black_AI, 3, 3)
+        self.possible_move_white = []
+        self.possible_move_black = []
+        self.makeNewGame(enable_white_AI, enable_black_AI, 1, 1)
         self.movable_tile = []
         self.choosen_piece = ""
         self.king_is_checked = [False, ""]
@@ -29,11 +30,12 @@ class Controller:
         self.run = True
         self.king_is_checked = [False, ""]
         self.game_ended = [False, ""]
-        self.possible_move = self.board.getPossibleMove()
+        self.possible_move_white = self.board.getPossibleMoveWhite()
+        self.possible_move_black = self.board.getPossibleMoveBlack()
         self.turn_step = 0
         if(enable_white_AI == True): 
             self.white_AI = True
-            self.minimax_white.updateDepth(max_depth_black)
+            self.minimax_white.updateDepth(max_depth_white)
         if(enable_black_AI == True): 
             self.black_AI = True
             self.minimax_black.updateDepth(max_depth_black)
@@ -80,7 +82,7 @@ class Controller:
                 self.turn_step = 1
                 movable_tile = deepcopy(self.movable_tile)
                 for move in movable_tile:
-                    if(self.possible_move[0].count([self.choosen_piece ,move]) <= 0):
+                    if([self.choosen_piece ,move] not in self.possible_move_white):
                         self.movable_tile.remove(move)
         if(self.black_AI == False):
             #Lượt của bên Black
@@ -103,7 +105,7 @@ class Controller:
                 self.turn_step = 3
                 movable_tile = deepcopy(self.movable_tile)
                 for move in movable_tile:
-                    if(self.possible_move[1].count([self.choosen_piece ,move]) <= 0):
+                    if([self.choosen_piece ,move] not in self.possible_move_black):
                         self.movable_tile.remove(move)
         
 
@@ -126,7 +128,8 @@ class Controller:
         "Event xảy ra khi một nước đi được thực hiện"
         self.movable_tile = []
         self.king_is_checked = self.board.getCheckedKing()
-        self.possible_move = self.board.getPossibleMove()
+        self.possible_move_white = self.board.getPossibleMoveWhite()
+        self.possible_move_black = self.board.getPossibleMoveBlack()
         self.sound_manager.playMoveSound()
 
         if self.board.pieceJustCaptured():  # Kiểm tra trực tiếp, không cần qua biến tạm
@@ -136,8 +139,8 @@ class Controller:
             self.sound_manager.check_sound.play()
         else:
             self.sound_manager.move_sound.play()
-        if(self.king_is_checked[0] == True):
-            if(len(self.possible_move[0]) == 0): self.game_ended = [True, "White"]
-            elif(len(self.possible_move[1]) == 0): self.game_ended = [True, "Black"]
-        elif(len(self.possible_move[0]) == 0 or len(self.possible_move[1]) == 0):
+        if(self.king_is_checked[0] == True or self.board.endGame()[0] == True):
+            if(len(self.possible_move_white) == 0): self.game_ended = [True, "White"]
+            elif(len(self.possible_move_black) == 0): self.game_ended = [True, "Black"]
+        elif(len(self.possible_move_white) == 0 or len(self.possible_move_black) == 0):
             self.game_ended = [True, "Draw"]

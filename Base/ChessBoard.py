@@ -1,4 +1,4 @@
-from copy import deepcopy
+from copy import deepcopy, copy
 from Base.Player import BlackPlayer, WhitePlayer
 
 class ChessBoard:
@@ -109,15 +109,12 @@ class ChessBoard:
             return [True, "Black"]
         return [False, ""]
     
-    def getPossibleMove(self):
+    def getPossibleMoveWhite(self):
         "KT các nước đi còn đi được của 2 bên, nếu hết nước đi thì game sẽ end"
-        if(self.endGame()[0] == True): return self.endGame()
+        if(self.endGame() == [True, "Black"]): return []
         white_possible_move = []
-        black_possible_move = []
         current_checked_king = self.getCheckedKing()
         #Xét từng nước đi một, giống cách Minimax
-        white_lose = True
-        black_lose = True
         for piece in self.player_white.chess_pieces:
             movable_tile = piece.displayMovableTile(self)
             for move in movable_tile:
@@ -129,8 +126,17 @@ class ChessBoard:
                 checked_king = copy_board.getCheckedKing()
                 if(checked_king[0] == False or (checked_king == [True, "Black"] and current_checked_king != [True, "White"])):
                     white_possible_move.append([piece ,move])
-                    white_lose = False
-
+        
+        return white_possible_move
+    
+    def getPossibleMoveBlack(self):
+        "KT các nước đi còn đi được của 2 bên, nếu hết nước đi thì game sẽ end"
+        if(self.endGame() == [True, "White"]): return []
+        black_possible_move = []
+        current_checked_king = self.getCheckedKing()
+        best_move = None
+        best_value = -float("Inf")
+        #Xét từng nước đi một, giống cách Minimax
         for piece in self.player_black.chess_pieces:
             movable_tile = piece.displayMovableTile(self)
             for move in movable_tile:
@@ -142,10 +148,37 @@ class ChessBoard:
                 checked_king = copy_board.getCheckedKing()
                 if(checked_king[0] == False or (checked_king == [True, "White"]  and current_checked_king != [True, "Black"])):
                     black_possible_move.append([piece, move])
-                    black_lose = False
 
-        return [white_possible_move, black_possible_move]
+
+        return black_possible_move
+
+    def displayToChessBoard(board_display, white_castle, black_castle):
+        "Chuyển từ bàn cờ vẽ 2D thành object bàn cờ, ..._castle = [Trái, Phải]: 2 bên có thể nhập thành không"
+        new_board = ChessBoard()
+        new_board.board_display = board_display
+        piece_stack = new_board.getAllPieces()
+        for i in range(0, 8):
+            for j in range(0, 8):
+                if(board_display[i, j] != "0"):
+                    piece = new_board.locatePiece([i, j])
+                    piece.position = [i, j]
+                    if(piece.name == "Pawn" and piece.position[0] != piece.start_position):
+                        piece.has_moved = True
+                    piece_stack.remove(piece) #Xếp dần quân cờ vào bàn cờ trống
+
+        if(white_castle[0] == False):
+            new_board.player_white.rock_1.has_moved = True
+        elif(white_castle[1] == False):
+            new_board.player_white.rock_2.has_moved = True
+
+        if(black_castle[0] == False):
+            new_board.player_black.rock_1.has_moved = True
+        elif(black_castle[1] == False):
+            new_board.player_black.rock_2.has_moved = True
         
+        #Xóa các quân đã bị ăn
+        for piece in piece_stack:
+            new_board.deletePiece(piece)
         
             
                 

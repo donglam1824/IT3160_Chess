@@ -5,7 +5,8 @@ class Paw(ChessPiece):
     "Tốt"
     def __init__(self, position, side):
         super().__init__(position, 10, "Pawn", side)
-        
+        if(side == "White"): start_position = 6
+        else: start_position = 1
         #KT di chuyển chưa
     def displayMovableTile(self, board):
         if(self.side == "White"): move_vector = -1
@@ -107,20 +108,4 @@ class King(ChessPiece):
             #KT Xe bên phải
             if(player.rock_1.has_moved == False and len(self.updateMove_Multiple([[0, 1]], board)) == 2):
                 movable_tile.append([self.position[0], self.position[1] +2])
-
-
-        #KT xem các nước đi có khiến Vua bị quân cờ địch bắt không
-        # if(self.side == "White"): opponent_pieces = board.player_black.chess_pieces
-        # elif(self.side == "Black"): opponent_pieces = board.player_white.chess_pieces
-        # for piece in opponent_pieces:
-        #     for move in movable_tile:
-        #         if(piece.name == "King"): not_movable_tile = piece.updateMove_Singular([[1, 0], [0, 1], [-1, 0], [0, -1], 
-        #                                                                                 [1, 1], [-1, 1], [1, -1], [-1, -1]], board)
-        #         else: not_movable_tile = piece.available_move
-        #         try:
-        #             not_movable_tile.index(move)
-        #         except ValueError:
-        #             continue
-        #         movable_tile.remove(move)
-        # self.available_move = movable_tile
         return movable_tile
