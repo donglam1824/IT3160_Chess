@@ -21,12 +21,14 @@ class Player:
         self.chess_pieces.extend(self.paws)
         self.chess_pieces.extend([self.rock_1, self.rock_2, self.bishop_1, self.bishop_2, 
                                   self.knight_1, self.knight_2, self.queen, self.king])
+        self.game_state = "Opening"
     def initalizePieces(self, board):
         for piece in self.chess_pieces:
             piece.displayMovableTile(board)
             piece.gradePiece()
         self.king.rock_1 = self.rock_1
         self.king.rock_2 = self.rock_2
+
     def phongHau(self, piece = Paw):
         "Tiến hành phong hậu cho tốt"
         new_queen = Queen(piece.position, piece.side)
@@ -37,6 +39,21 @@ class Player:
         value = 0
         for piece in self.chess_pieces:
             value += piece.value
+        if(self.bishop_1 in self.chess_pieces and self.bishop_2 in self.chess_pieces):
+            value += 5 #Bonus khi có cả 2 Bishop
+        if(self.knight_1 in self.chess_pieces and self.knight_2 in self.chess_pieces):
+            value += 3 #Bonus khi còn cả 2 Mã
+        if(len(self.paws) == 8): 
+            value -= 3 #Penalty khi có quá nhiều Pawn
+        elif(len(self.paws) == 7):
+            value -= 1
+        elif(len(self.paws) <= 1):
+            value -= 3
+        elif(len(self.paws) == 0):
+            value -= 10 #Penalty khi có quá ít Pawn
+        if(self.game_state == "Opening" and self.queen.has_moved == True):
+            value -= 2 #Penalty khi đi Hậu quá sớm
+
         return value
     def getOppositeSide(side):
         if(side == "White"): return "Black"

@@ -1,5 +1,6 @@
 from copy import deepcopy, copy
 from Base.Player import BlackPlayer, WhitePlayer
+from Base.PieceEvaluation import EvaluatePiece
 
 class ChessBoard:
     delete_counter = 0
@@ -23,6 +24,7 @@ class ChessBoard:
         self.captured_white_pieces = []
         self.captured_black_pieces = []
         self.last_captured_piece = None
+        self.game_state = "Opening" #3 state: "Opening"; "Middle"; "Ending"
     def printBoard(self):
         "Vẽ cờ trên màn console"
         print("|")
@@ -38,8 +40,20 @@ class ChessBoard:
         chess_pieces = []
         chess_pieces.extend(self.player_black.chess_pieces)
         chess_pieces.extend(self.player_white.chess_pieces)
-
         return chess_pieces
+    
+    def updateToMiddleState(self):
+        self.game_state = "Middle"
+        self.player_black.game_state = "Middle"
+        self.player_white.game_state = "Middle"
+
+    def updateToEndingState(self):
+        self.game_state = "Ending"
+        self.player_black.game_state = "Ending"
+        self.player_white.game_state = "Ending"
+        self.white_king.score_table = EvaluatePiece.king_white_late
+        self.black_king.score_table = EvaluatePiece.king_black_late
+
     def locatePiece(self, position):
         "Xác định quân cờ trên 1 position, return object Quân cờ"
         piece_symbol = self.board_display[position[0]][position[1]]
@@ -59,9 +73,10 @@ class ChessBoard:
         elif(piece_symbol[1:] == "K"): return player.king
 
     
-    def deletePiece(self, position):
+    def deletePiece(self, eaten_piece):
         "Xoá quân cờ bị ăn ra khỏi bàn cờ"
-        eaten_piece = self.locatePiece(position)
+        if(self.game_state == "Opening"): self.updateToMiddleState() #Hết Opening sau khi ăn 1 quân
+
         eaten_piece.isEaten(self)
         if(eaten_piece.side == "White"): 
             self.captured_white_pieces.append(eaten_piece)
@@ -71,6 +86,11 @@ class ChessBoard:
             self.captured_black_pieces.append(eaten_piece)
         self.last_captured_piece = eaten_piece
         self.delete_counter += 1
+
+        if((self.player_black.queen in self.captured_black_pieces and self.player_white.queen in self.captured_white_pieces) 
+        or len(self.getAllPieces()) <= 14):
+            self.updateToEndingState() #Khi Hậu bị ăn hết hoặc còn 14 quân trên bàn đấu, chuyển về Ending
+
 
     def pieceJustCaptured(self):
         """Checks if a piece was captured in the most recent move."""
@@ -151,6 +171,7 @@ class ChessBoard:
 
 
         return black_possible_move
+    
 
     def displayToChessBoard(board_display, white_castle, black_castle):
         "Chuyển từ bàn cờ vẽ 2D thành object bàn cờ, ..._castle = [Trái, Phải]: 2 bên có thể nhập thành không"
@@ -159,7 +180,7 @@ class ChessBoard:
         piece_stack = new_board.getAllPieces()
         for i in range(0, 8):
             for j in range(0, 8):
-                if(board_display[i, j] != "0"):
+                if(board_display[i][j] != "0"):
                     piece = new_board.locatePiece([i, j])
                     piece.position = [i, j]
                     if(piece.name == "Pawn" and piece.position[0] != piece.start_position):
@@ -179,6 +200,8 @@ class ChessBoard:
         #Xóa các quân đã bị ăn
         for piece in piece_stack:
             new_board.deletePiece(piece)
+        
+        return new_board
         
             
                 

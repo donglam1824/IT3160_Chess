@@ -2,6 +2,7 @@ from copy import deepcopy
 from Base.PieceEvaluation import EvaluatePiece
 class ChessPiece:
     "Các thược tính cơ bản của quân cờ"
+
     def __init__(self, position, piece_value, name, side):
 #        self.occupied_tile.append(position)
         self.position = position
@@ -11,11 +12,12 @@ class ChessPiece:
         self.name = name
         self.has_moved = False
         self.side = side
+        self.piece_symbol = ""
         self.score_table = EvaluatePiece.initailizeScore(name, side) # Điểm theo vị trí của bàn cờ
     
     def makeMove(self, new_position, board):
-        if(board.board_display[new_position[0]][new_position[1]] != "0"):
-            board.deletePiece(new_position)
+        if(board.board_display[new_position[0]][new_position[1]] != "0"):     
+            board.deletePiece(board.locatePiece(new_position))
         board.board_display[new_position[0]][new_position[1]] = board.board_display[self.position[0]][self.position[1]]
         board.board_display[self.position[0]][self.position[1]] = "0"
         self.position = new_position

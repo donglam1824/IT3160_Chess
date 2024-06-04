@@ -14,10 +14,10 @@ screen = pygame.display.set_mode((screen_width, screen_height))  # Kích thướ
 original_background_image = pygame.image.load(image_folder + "Menu.jpg").convert()
 background_image = pygame.transform.scale(original_background_image, (screen_width, screen_height))
 font = pygame.font.SysFont(None, 30)
-button_color = (165, 42, 42)  # Màu nâu đỏ
-button_hover_color = (139, 0, 0)  # Màu nâu đậm
+button_color = (255, 255, 255)  # Màu trắng
+button_hover_color = (191, 191, 191)  # Màu xám sáng
 button_border_color = (0, 0, 0)  # Màu đen
-text_color = (255, 255, 255)  # Màu trắng
+text_color = (0, 0, 0)  # Màu đen
 border_width = 2
 corner_radius = 10
 

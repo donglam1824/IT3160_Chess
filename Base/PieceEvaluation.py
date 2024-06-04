@@ -79,6 +79,8 @@ class EvaluatePiece:
         for element in table:
             new_list.insert(0, element)
         return new_list
+    
+    king_black_late = reverseTable(king_white_late)
         
     def initailizeScore(name = str, side = str):
         need_reverse = True

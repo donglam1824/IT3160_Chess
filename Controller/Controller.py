@@ -16,7 +16,7 @@ class Controller:
         self.black_AI = False
         self.possible_move_white = []
         self.possible_move_black = []
-        self.makeNewGame(enable_white_AI, enable_black_AI, 1, 1)
+        self.makeNewGame(enable_white_AI, enable_black_AI, 3, 3)
         self.movable_tile = []
         self.choosen_piece = ""
         self.king_is_checked = [False, ""]

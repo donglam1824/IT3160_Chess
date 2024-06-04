@@ -5,8 +5,8 @@ class Paw(ChessPiece):
     "Tốt"
     def __init__(self, position, side):
         super().__init__(position, 10, "Pawn", side)
-        if(side == "White"): start_position = 6
-        else: start_position = 1
+        if(side == "White"): self.start_position = 6
+        else: self.start_position = 1
         #KT di chuyển chưa
     def displayMovableTile(self, board):
         if(self.side == "White"): move_vector = -1

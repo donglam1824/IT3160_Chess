@@ -14,7 +14,7 @@ class MonteCarloSearcher:
     data_file_path = "MonteCarlo/datafile.bin"
     database_path = "MonteCarlo/database.db"
     def __init__(self):
-        self.root = Node(root_board, "White", None, None)
+        self.root = Node(root_board, "White", None, None, [True, True], [True, True])
         self.node_tree = []
         self.expansion(self.root)
 
@@ -44,7 +44,8 @@ class MonteCarloSearcher:
             copy_board = deepcopy(node.board)
             piece_index = node.board.getAllPieces().index(move[0])
             copy_board.getAllPieces()[piece_index].makeMove(move[1], copy_board)
-            new_node = Node(copy_board, Player.getOppositeSide(node.current_side), node, move)
+            new_node = Node(copy_board, Player.getOppositeSide(node.current_side), 
+            node, [copy_board.board_display[move[1][0]][move[1][1]], move[1]], True, True)
             node.children.append(new_node)
             self.node_tree.append(new_node)
         return
@@ -104,7 +105,8 @@ class MonteCarloSearcher:
         conn = sqlite3.connect(self.database_path)
         cursor = conn.cursor()
         cursor.execute('DROP TABLE IF EXISTS Monte_Carlo_Tree')
-        cursor.execute('''CREATE TABLE Monte_Carlo_Tree (tree_depth INTERGER, board BLOB, side TEXT , visited INTERGER, total REAL)''')
+        cursor.execute('''CREATE TABLE Monte_Carlo_Tree (tree_depth INTERGER, board BLOB, side TEXT, 
+                       previous_move BLOB, white_castle_state BLOB, black_castle_state BLOB, visited INTERGER, total REAL)''')
         self.writeSQLiteTreeData(cursor, self.root, 0)
         conn.commit()
         conn.close()
@@ -147,8 +149,8 @@ class MonteCarloSearcher:
     
     def writeSQLiteTreeData(self, cursor, node : Node, depth):
         #Saving
-        cursor.execute('INSERT INTO Monte_Carlo_Tree (tree_depth, board, side, visited, total) VALUES (?, ?, ?, ?, ?)'
-                       ,(depth, str(node.board.board_display), node.current_side, node.visited, node.total))
+        cursor.execute('INSERT INTO Monte_Carlo_Tree (tree_depth, board, side, previous_move, visited, total) VALUES (?, ?, ?, ?, ?, ?)'
+                       ,(depth, str(node.board.board_display), node.current_side, str(node.previous_move), node.visited, node.total))
         for child in node.children:
             self.writeSQLiteTreeData(cursor ,child, depth+1)
         

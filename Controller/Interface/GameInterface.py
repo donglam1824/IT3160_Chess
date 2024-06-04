@@ -45,7 +45,7 @@ class GameInterface:
         status_text = ['Trắng đang chọn quân', 'Trắng đang chọn nước đi',
                         'Đen đang chọn quân', 'Đen đang chọn nước đi']
         #hiện text tương ứng với trạng thái 
-#        self.screen.blit(self.big_font.render(status_text[self.turn_step], True, 'black'), (20, 820))
+        self.screen.blit(self.big_font.render(status_text[1], True, 'black'), (20, 820))
             
         for i in range(9):
                 pygame.draw.line(self.screen, 'black', (0, 100 * i), (800, 100 * i), 2)
@@ -60,7 +60,7 @@ class GameInterface:
             piece = white_pieces[i]
             index = image.piece_list.index(piece.name)
             if piece.name == "Pawn":
-                self.screen.blit(image.white_pawn, (piece.position[1] * 100 + 22, piece.position[0] * 100 + 30))
+                self.screen.blit(image.white_pawn, (piece.position[1] * 100 + 20, piece.position[0] * 100 + 30))
             else:
                 self.screen.blit(image.white_images[index], (piece.position[1] * 100 + 10, piece.position[0] * 100 + 10))
                     
@@ -71,7 +71,7 @@ class GameInterface:
             index = image.piece_list.index(piece.name)
             if piece.name == "Pawn":
                 self.screen.blit(image.black_pawn, 
-                    (piece.position[1] * 100 + 22, piece.position[0] * 100 + 30))
+                    (piece.position[1] * 100 + 20, piece.position[0] * 100 + 30))
             else:
                 self.screen.blit(image.black_images[index], 
                     (piece.position[1] * 100 + 10, piece.position[0] * 100 + 10))
