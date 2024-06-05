@@ -79,7 +79,7 @@ class GameInterface:
     
     # vẽ nước hợp lệ trên bàn cờ và quân cờ đang được chọn
     def draw_valid(self, moves ,choosen_piece, turn_step):
-        if type(choosen_piece) is not str:
+        if choosen_piece != None:
             if turn_step < 2:
                 color = 'red'
                 pygame.draw.rect(self.screen, 'red', 

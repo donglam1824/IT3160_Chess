@@ -1,9 +1,9 @@
 from copy import deepcopy, copy
+import time
 from Base.Player import BlackPlayer, WhitePlayer
 from Base.PieceEvaluation import EvaluatePiece
 
 class ChessBoard:
-    delete_counter = 0
 
     def __init__(self):
         self.player_white = WhitePlayer()
@@ -57,7 +57,7 @@ class ChessBoard:
     def locatePiece(self, position):
         "Xác định quân cờ trên 1 position, return object Quân cờ"
         piece_symbol = self.board_display[position[0]][position[1]]
-        if(piece_symbol == "0"): return ""
+        if(piece_symbol == "0"): return None
         if(piece_symbol[0] == 'b'): player = self.player_black
         else: player = self.player_white
         if(piece_symbol[1] == 'p'): return player.paws[int(piece_symbol[2])]
@@ -76,7 +76,6 @@ class ChessBoard:
     def deletePiece(self, eaten_piece):
         "Xoá quân cờ bị ăn ra khỏi bàn cờ"
         if(self.game_state == "Opening"): self.updateToMiddleState() #Hết Opening sau khi ăn 1 quân
-
         eaten_piece.isEaten(self)
         if(eaten_piece.side == "White"): 
             self.captured_white_pieces.append(eaten_piece)
@@ -85,12 +84,20 @@ class ChessBoard:
             self.player_black.chess_pieces.remove(eaten_piece)
             self.captured_black_pieces.append(eaten_piece)
         self.last_captured_piece = eaten_piece
-        self.delete_counter += 1
-
         if((self.player_black.queen in self.captured_black_pieces and self.player_white.queen in self.captured_white_pieces) 
         or len(self.getAllPieces()) <= 14):
             self.updateToEndingState() #Khi Hậu bị ăn hết hoặc còn 14 quân trên bàn đấu, chuyển về Ending
-
+    
+    def revivePiece(self, revived_piece, piece_index, piece_symbol):
+        "Hồi sinh 1 quân cờ"
+        if(revived_piece.side == "White"): 
+            self.captured_white_pieces.remove(revived_piece)
+            self.player_white.chess_pieces.insert(piece_index , revived_piece)
+        elif(revived_piece.side == "Black"): 
+            self.captured_black_pieces.remove(revived_piece)
+            self.player_black.chess_pieces.insert(piece_index , revived_piece)
+        self.board_display[revived_piece.position[0]][revived_piece.position[1]] = piece_symbol
+        self.last_captured_piece = None
 
     def pieceJustCaptured(self):
         """Checks if a piece was captured in the most recent move."""

@@ -5,8 +5,12 @@ class Paw(ChessPiece):
     "Tốt"
     def __init__(self, position, side):
         super().__init__(position, 10, "Pawn", side)
-        if(side == "White"): self.start_position = 6
-        else: self.start_position = 1
+        if(side == "White"): 
+            self.start_position = 6
+            self.final_position = 0
+        else: 
+            self.start_position = 1
+            self.final_position = 7
         #KT di chuyển chưa
     def displayMovableTile(self, board):
         if(self.side == "White"): move_vector = -1
@@ -32,9 +36,7 @@ class Paw(ChessPiece):
     def makeMove(self, new_position, board):
         super().makeMove(new_position, board)
         #Kiểm tra xem phong hậu được không
-        if(self.side == "White"): final_position = 0
-        elif(self.side == "Black"): final_position = 7
-        if(new_position[0] == final_position):
+        if(new_position[0] == self.final_position):
             board.phongHau(self)
             
 class Rock(ChessPiece):
@@ -93,8 +95,9 @@ class King(ChessPiece):
             #Thực hiện nhập thành
             if(castle_check < 0): self.rock_1.makeMove([new_position[0], new_position[1] + 1], board)
             else: self.rock_2.makeMove([new_position[0], new_position[1] - 1], board)
+            self.value += 8 #Nhập thành được bonus điểm
         super().makeMove(new_position, board)
-
+        
     def displayMovableTile(self, board):
         movable_tile = self.updateMove_Singular([[1, 0], [0, 1], [-1, 0], [0, -1], 
                                                  [1, 1], [-1, 1], [1, -1], [-1, -1]], board)
@@ -109,3 +112,6 @@ class King(ChessPiece):
             if(player.rock_1.has_moved == False and len(self.updateMove_Multiple([[0, 1]], board)) == 2):
                 movable_tile.append([self.position[0], self.position[1] +2])
         return movable_tile
+    
+    def returnToPosition(self, new_position, board):
+        super().makeMove(new_position, board)

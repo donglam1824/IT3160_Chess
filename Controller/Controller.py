@@ -1,24 +1,25 @@
 from copy import deepcopy
 from Base.ChessBoard import ChessBoard
 from Controller.Interface.GameInterface import GameInterface
-from Minimax.MiniMaxClass import Minimax
+from Minimax.WhiteMax import WhiteMax
+from Minimax.BlackMax import BlackMax
 from Controller.Interface.SoundGame import SoundManager
 import pygame
 
 
 class Controller:
     sound_manager = SoundManager()
-    minimax_black = Minimax("Black", 3)
-    minimax_white = Minimax("White", 2)
+    minimax_black = BlackMax(3)
+    minimax_white = WhiteMax(2)
     def __init__(self, enable_white_AI: bool, enable_black_AI: bool):
         pygame.mixer.init()
         self.white_AI = False
         self.black_AI = False
         self.possible_move_white = []
         self.possible_move_black = []
-        self.makeNewGame(enable_white_AI, enable_black_AI, 3, 3)
+        self.makeNewGame(enable_white_AI, enable_black_AI, 3, 4)
         self.movable_tile = []
-        self.choosen_piece = ""
+        self.choosen_piece = None
         self.king_is_checked = [False, ""]
         self.turn_step = 0
     
@@ -63,7 +64,7 @@ class Controller:
             return
         if(self.white_AI == False):
             #Luợt của bên White
-            if(self.turn_step == 1 and (click_coords in self.movable_tile) and self.choosen_piece != ""):
+            if(self.turn_step == 1 and (click_coords in self.movable_tile) and self.choosen_piece != None):
                 #Di chuyển quân cờ trên các ô màu đỏ
                 self.choosen_piece.makeMove(click_coords ,self.board)
                 self.turn_step = 2
@@ -73,7 +74,7 @@ class Controller:
                 #Turn của bên White đi
                 self.choosen_piece = self.board.locatePiece(click_coords)
                 if(self.choosen_piece in self.board.player_black.chess_pieces): 
-                    self.choosen_piece = ""
+                    self.choosen_piece = None
                     return
                 #Tìm các nước đi
                 try:
@@ -86,7 +87,7 @@ class Controller:
                         self.movable_tile.remove(move)
         if(self.black_AI == False):
             #Lượt của bên Black
-            if(self.turn_step == 3 and (click_coords in self.movable_tile) and self.choosen_piece != ""):
+            if(self.turn_step == 3 and (click_coords in self.movable_tile) and self.choosen_piece != None):
                 #Di chuyển quân cờ trên các ô màu đỏ
                 self.choosen_piece.makeMove(click_coords ,self.board)
                 self.turn_step = 0
@@ -96,7 +97,7 @@ class Controller:
                 #Turn của bên White đi
                 self.choosen_piece = self.board.locatePiece(click_coords)
                 if(self.choosen_piece in self.board.player_white.chess_pieces): 
-                    self.choosen_piece = ""
+                    self.choosen_piece = None
                     return
                 #Tìm các nước đi
                 try:
@@ -139,6 +140,7 @@ class Controller:
             self.sound_manager.check_sound.play()
         else:
             self.sound_manager.move_sound.play()
+
         if(self.king_is_checked[0] == True or self.board.endGame()[0] == True):
             if(len(self.possible_move_white) == 0): self.game_ended = [True, "White"]
             elif(len(self.possible_move_black) == 0): self.game_ended = [True, "Black"]
