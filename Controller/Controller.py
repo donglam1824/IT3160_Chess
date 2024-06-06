@@ -1,4 +1,4 @@
-from copy import deepcopy
+from copy import copy, deepcopy
 from Base.ChessBoard import ChessBoard
 from Controller.Interface.GameInterface import GameInterface
 from Minimax.WhiteMax import WhiteMax
@@ -73,15 +73,13 @@ class Controller:
             if(self.turn_step <= 1):
                 #Turn của bên White đi
                 self.choosen_piece = self.board.locatePiece(click_coords)
-                if(self.choosen_piece in self.board.player_black.chess_pieces): 
+                if(self.choosen_piece in self.board.player_black.chess_pieces or self.choosen_piece == None): 
                     self.choosen_piece = None
                     return
                 #Tìm các nước đi
-                try:
-                    self.movable_tile = self.choosen_piece.displayMovableTile(self.board)
-                except AttributeError: pass #Chọn ô ko có quân cờ
+                self.movable_tile = self.choosen_piece.displayMovableTile(self.board)
                 self.turn_step = 1
-                movable_tile = deepcopy(self.movable_tile)
+                movable_tile = copy(self.movable_tile)
                 for move in movable_tile:
                     if([self.choosen_piece ,move] not in self.possible_move_white):
                         self.movable_tile.remove(move)
@@ -94,17 +92,15 @@ class Controller:
                 self.onMove()
                 return
             if(self.turn_step <= 3 and self.turn_step > 1):
-                #Turn của bên White đi
+                #Turn của bên Black đi
                 self.choosen_piece = self.board.locatePiece(click_coords)
-                if(self.choosen_piece in self.board.player_white.chess_pieces): 
+                if(self.choosen_piece in self.board.player_white.chess_pieces or self.choosen_piece == None): 
                     self.choosen_piece = None
                     return
                 #Tìm các nước đi
-                try:
-                    self.movable_tile = self.choosen_piece.displayMovableTile(self.board)
-                except AttributeError: pass #Chọn ô ko có quân cờ
+                self.movable_tile = self.choosen_piece.displayMovableTile(self.board)
                 self.turn_step = 3
-                movable_tile = deepcopy(self.movable_tile)
+                movable_tile = copy(self.movable_tile)
                 for move in movable_tile:
                     if([self.choosen_piece ,move] not in self.possible_move_black):
                         self.movable_tile.remove(move)

@@ -1,10 +1,9 @@
-from Base.ChessBoard import ChessBoard
-
 class PastMove:
-    def __init__(self, piece, old_position, move_position, is_castle_move
+    def __init__(self, piece, old_position, move_position, has_moved, is_castle_move
                  , is_pawn_assended_move, eaten_piece, index, symbol):
         self.piece = piece
         self.old_position = old_position
+        self.has_moved = has_moved
         self.move_position = move_position
         self.is_castle_move = is_castle_move #[True/False, if True = Lelf/Right]
         self.is_pawn_assended_move = is_pawn_assended_move #True/False

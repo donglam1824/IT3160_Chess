@@ -2,6 +2,7 @@ from copy import deepcopy, copy
 import time
 from Base.Player import BlackPlayer, WhitePlayer
 from Base.PieceEvaluation import EvaluatePiece
+from MoveSimulate.MoveSimulator import MoveSimulator
 
 class ChessBoard:
 
@@ -120,10 +121,10 @@ class ChessBoard:
     def getCheckedKing(self):
         "KT xem vua có đang bị chiếu không, nếu có trả về bên bị chiếu"
         for piece in self.player_black.chess_pieces:
-            if(piece.displayMovableTile(self).count(self.white_king.position) > 0):
+            if self.white_king.position in piece.displayMovableTile(self):
                 return [True, "White"]
         for piece in self.player_white.chess_pieces:
-            if(piece.displayMovableTile(self).count(self.black_king.position) > 0):
+            if self.black_king.position in piece.displayMovableTile(self):
                 return [True, "Black"]
             
         return [False, ""]
@@ -145,15 +146,11 @@ class ChessBoard:
         for piece in self.player_white.chess_pieces:
             movable_tile = piece.displayMovableTile(self)
             for move in movable_tile:
-                copy_board = deepcopy(self)
-                p_index = self.player_white.chess_pieces.index(piece)
-                copy_piece = copy_board.player_white.chess_pieces[p_index]
-                #Tạo copy của bàn cờ
-                copy_piece.makeMove(move, copy_board)
-                checked_king = copy_board.getCheckedKing()
+                MoveSimulator.simulatedMove(self, [piece, move])
+                checked_king = self.getCheckedKing()
                 if(checked_king[0] == False or (checked_king == [True, "Black"] and current_checked_king != [True, "White"])):
                     white_possible_move.append([piece ,move])
-        
+                MoveSimulator.revertPastMove(self)
         return white_possible_move
     
     def getPossibleMoveBlack(self):
@@ -161,22 +158,15 @@ class ChessBoard:
         if(self.endGame() == [True, "White"]): return []
         black_possible_move = []
         current_checked_king = self.getCheckedKing()
-        best_move = None
-        best_value = -float("Inf")
         #Xét từng nước đi một, giống cách Minimax
         for piece in self.player_black.chess_pieces:
             movable_tile = piece.displayMovableTile(self)
             for move in movable_tile:
-                copy_board = deepcopy(self)
-                p_index = self.player_black.chess_pieces.index(piece)
-                #Tạo copy của bàn cờ
-                copy_piece = copy_board.player_black.chess_pieces[p_index]
-                copy_piece.makeMove(move, copy_board)
-                checked_king = copy_board.getCheckedKing()
+                MoveSimulator.simulatedMove(self, [piece, move])
+                checked_king = self.getCheckedKing()
                 if(checked_king[0] == False or (checked_king == [True, "White"]  and current_checked_king != [True, "Black"])):
                     black_possible_move.append([piece, move])
-
-
+                MoveSimulator.revertPastMove(self)
         return black_possible_move
     
 

@@ -2,6 +2,8 @@ from Base.ChessBoard import ChessBoard
 from Minimax.MiniMaxClass import Minimax
 from copy import deepcopy
 
+from MoveSimulate.MoveSimulator import MoveSimulator
+
 class BlackMax(Minimax):
     def __init__(self, max_depth):
         super().__init__(max_depth)
@@ -23,7 +25,7 @@ class BlackMax(Minimax):
                 movable_tile = piece.displayMovableTile(board)
                 for move in movable_tile:
                     p_index = board.player_black.chess_pieces.index(piece)
-                    self.simulatedMove(board, [piece, move])
+                    MoveSimulator.simulatedMove(board, [piece, move])
                     board_value = self.miniMaxActive(best_value, piece_index ,best_move, not is_max, 
                                                depth - 1, board, alpha, beta)[0]
                     if(best_value < board_value): 
@@ -31,7 +33,7 @@ class BlackMax(Minimax):
                         piece_index = p_index
                         best_move = move
                         alpha = max(best_value, alpha)
-                    self.revertPastMove(board)
+                    MoveSimulator.revertPastMove(board)
                     if(beta <= alpha): break
                 if(beta <= alpha): break
         else:
@@ -39,7 +41,7 @@ class BlackMax(Minimax):
                 movable_tile = piece.displayMovableTile(board)
                 for move in movable_tile:
                     p_index = board.player_white.chess_pieces.index(piece)
-                    self.simulatedMove(board, [piece, move])
+                    MoveSimulator.simulatedMove(board, [piece, move])
                     board_value = self.miniMaxActive(best_value, piece_index, best_move, not is_max, 
                                                depth - 1, board, alpha, beta)[0]
                     if(best_value > board_value): 
@@ -47,7 +49,7 @@ class BlackMax(Minimax):
                         piece_index = p_index
                         best_move = move
                         beta = min(best_value, beta)
-                    self.revertPastMove(board)
+                    MoveSimulator.revertPastMove(board)
                     if(beta <= alpha): break
                 if(beta <= alpha): break
         return [best_value, piece_index , best_move]
