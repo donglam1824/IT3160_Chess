@@ -6,7 +6,7 @@ monte_carlo_searcher = MonteCarloSearcher()
 # monte_carlo_searcher.makeNewTree()
 for i in range(0, 10):
     monte_carlo_searcher.loadTreeData()
-    monte_carlo_searcher.runAlgorihm(5000  )
+    monte_carlo_searcher.runAlgorihm(150)
 
 # my_repo = git.Repo(os.getcwd())
 # if my_repo.is_dirty(untracked_files=True):
