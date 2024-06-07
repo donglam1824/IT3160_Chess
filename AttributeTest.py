@@ -16,26 +16,24 @@ from MoveSimulate.MoveSimulator import MoveSimulator
 #                                 , [True, True], [True, True])
 
 board = ChessBoard()
-board.player_white.bishop_1.makeMove([0, 0], board)
-board.player_white.queen.makeMove([0, 1], board)
+# board.player_white.bishop_1.makeMove([0, 0], board)
+# board.player_white.queen.makeMove([0, 1], board)
 
 
-start_time = time.perf_counter()
-copy_board = deepcopy(board)
-copy_board.player_white.paws[1].makeMove([1, 1], copy_board)
-print(time.perf_counter() - start_time)
-
-start_time = time.perf_counter()
 # minimax_white.simulatedMove(board, [board.player_white.paws[1], [0,1]])
-MoveSimulator.simulatedMove(board, [board.white_king, [7,2]])
-
+MoveSimulator.simulatedMove(board, [board.player_black.queen, [7, 4]])
+board.printBoard()
+MoveSimulator.simulatedMove(board, [board.player_white.paws[1], [5, 1]])
+board.printBoard()
+MoveSimulator.simulatedMove(board, [board.player_black.queen, [7, 3]])
 board.printBoard()
 
 MoveSimulator.revertPastMove(board)
-print(time.perf_counter() - start_time)
-
-print(board.white_king.has_moved, board.player_white.rock_1.has_moved, board.player_white.rock_2.has_moved)
-
+board.printBoard()
+MoveSimulator.revertPastMove(board)
+board.printBoard()
+MoveSimulator.revertPastMove(board)
 board.printBoard()
 
+pass
 

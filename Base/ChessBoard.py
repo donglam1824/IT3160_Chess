@@ -77,7 +77,6 @@ class ChessBoard:
     def deletePiece(self, eaten_piece):
         "Xoá quân cờ bị ăn ra khỏi bàn cờ"
         if(self.game_state == "Opening"): self.updateToMiddleState() #Hết Opening sau khi ăn 1 quân
-        eaten_piece.isEaten(self)
         if(eaten_piece.side == "White"): 
             self.captured_white_pieces.append(eaten_piece)
             self.player_white.chess_pieces.remove(eaten_piece)
@@ -142,15 +141,16 @@ class ChessBoard:
         if(self.endGame() == [True, "Black"]): return []
         white_possible_move = []
         current_checked_king = self.getCheckedKing()
+        move_simulator = MoveSimulator(self)
         #Xét từng nước đi một, giống cách Minimax
         for piece in self.player_white.chess_pieces:
             movable_tile = piece.displayMovableTile(self)
             for move in movable_tile:
-                MoveSimulator.simulatedMove(self, [piece, move])
+                move_simulator.simulatedMove([piece, move])
                 checked_king = self.getCheckedKing()
                 if(checked_king[0] == False or (checked_king == [True, "Black"] and current_checked_king != [True, "White"])):
                     white_possible_move.append([piece ,move])
-                MoveSimulator.revertPastMove(self)
+                move_simulator.revertPastMove(self)
         return white_possible_move
     
     def getPossibleMoveBlack(self):
@@ -158,15 +158,16 @@ class ChessBoard:
         if(self.endGame() == [True, "White"]): return []
         black_possible_move = []
         current_checked_king = self.getCheckedKing()
+        move_simulator = MoveSimulator(self)
         #Xét từng nước đi một, giống cách Minimax
         for piece in self.player_black.chess_pieces:
             movable_tile = piece.displayMovableTile(self)
             for move in movable_tile:
-                MoveSimulator.simulatedMove(self, [piece, move])
+                move_simulator.simulatedMove([piece, move])
                 checked_king = self.getCheckedKing()
                 if(checked_king[0] == False or (checked_king == [True, "White"]  and current_checked_king != [True, "Black"])):
                     black_possible_move.append([piece, move])
-                MoveSimulator.revertPastMove(self)
+                move_simulator.revertPastMove(self)
         return black_possible_move
     
 

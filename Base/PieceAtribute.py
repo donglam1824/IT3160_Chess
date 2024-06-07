@@ -6,7 +6,6 @@ class ChessPiece:
     def __init__(self, position, piece_value, name, side):
 #        self.occupied_tile.append(position)
         self.position = position
-        self.is_dead = False
         self.value = piece_value
         self.base_value = piece_value
         self.name = name
@@ -22,9 +21,6 @@ class ChessPiece:
         board.board_display[self.position[0]][self.position[1]] = "0"
         self.position = new_position
         self.has_moved = True
-
-    def isEaten(self, board):
-        self.is_dead = True
 
     def gradePiece(self):
         self.value = self.base_value + self.score_table[self.position[0]][self.position[1]]

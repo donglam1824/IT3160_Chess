@@ -9,7 +9,9 @@ class BlackMax(Minimax):
         super().__init__(max_depth)
 
     def miniMax(self, best_value, piece_index, best_move , is_max, board = ChessBoard, alpha = float, beta = float):
+        "Tìm nước đi tốt nhât, trả về [best_value, piece_index , best_move]"
         copy_board = deepcopy(board)
+        self.move_simulator.board = copy_board
         return self.miniMaxActive(best_value, piece_index, best_move , is_max, self.max_depth, copy_board, alpha, beta)
     
     def miniMaxActive(self, best_value, piece_index, best_move , is_max, depth, board = ChessBoard, alpha = float, beta = float):
@@ -25,7 +27,7 @@ class BlackMax(Minimax):
                 movable_tile = piece.displayMovableTile(board)
                 for move in movable_tile:
                     p_index = board.player_black.chess_pieces.index(piece)
-                    MoveSimulator.simulatedMove(board, [piece, move])
+                    self.move_simulator.simulatedMove([piece, move])
                     board_value = self.miniMaxActive(best_value, piece_index ,best_move, not is_max, 
                                                depth - 1, board, alpha, beta)[0]
                     if(best_value < board_value): 
@@ -33,7 +35,7 @@ class BlackMax(Minimax):
                         piece_index = p_index
                         best_move = move
                         alpha = max(best_value, alpha)
-                    MoveSimulator.revertPastMove(board)
+                    self.move_simulator.revertPastMove(board)
                     if(beta <= alpha): break
                 if(beta <= alpha): break
         else:
@@ -41,7 +43,7 @@ class BlackMax(Minimax):
                 movable_tile = piece.displayMovableTile(board)
                 for move in movable_tile:
                     p_index = board.player_white.chess_pieces.index(piece)
-                    MoveSimulator.simulatedMove(board, [piece, move])
+                    self.move_simulator.simulatedMove([piece, move])
                     board_value = self.miniMaxActive(best_value, piece_index, best_move, not is_max, 
                                                depth - 1, board, alpha, beta)[0]
                     if(best_value > board_value): 
@@ -49,7 +51,7 @@ class BlackMax(Minimax):
                         piece_index = p_index
                         best_move = move
                         beta = min(best_value, beta)
-                    MoveSimulator.revertPastMove(board)
+                    self.move_simulator.revertPastMove(board)
                     if(beta <= alpha): break
                 if(beta <= alpha): break
         return [best_value, piece_index , best_move]

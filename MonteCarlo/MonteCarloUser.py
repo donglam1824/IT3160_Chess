@@ -1,6 +1,7 @@
 import random
 import sqlite3
 
+from Base.ChessBoard import ChessBoard
 from MonteCarlo.Node import Node
 from Minimax.BlackMax import BlackMax
 from Minimax.WhiteMax import WhiteMax
@@ -15,16 +16,27 @@ class MonteCarloUser:
         self.root : Node = None
         self.loadTreeData()
         self.current_node = self.root
+        self.current_board = ChessBoard()
     
     def moveToNode(self, old_position, new_position):
+        "Di chuyển tới nút"
         for node in self.current_node.children:
             if(old_position == node.old_position and new_position == node.new_position):
                 self.current_node = node
+                piece = self.current_board.locatePiece(old_position)
+                piece.makeMove(new_position, self.current_board)
                 return
+        print("Can't find node")
+        self.current_node = None
 
     def findBestMove(self):
-        choosen_node : Node =  self.miniMaxing(0, None, self.current_node, True, 3, -float("Inf"), float("Inf"))[1]
-        return [choosen_node.old_position, choosen_node.new_position]
+        "Trả về nước đi tốt nhất tìm được, theo [old_position, new_position]"
+        if(choosen_node != None):
+            choosen_node : Node =  self.miniMaxing(0, None, self.current_node, True, 3, -float("Inf"), float("Inf"))[1]
+            return [choosen_node.old_position, choosen_node.new_position]
+        else:
+            return None
+
     
     def miniMaxing(self, best_value, best_node, current_node : Node, is_max, depth, alpha : float, beta : float):
         "Lọc qua cây nước đi theo miniMax"
@@ -54,6 +66,10 @@ class MonteCarloUser:
                     alpha = min(best_value, alpha)
                 if(beta <= alpha): break
         return [best_value, best_node]
+    
+    def unvisitNodeHandler(self):
+        "Xử lý khi gặp nút chưa gặp"
+
 
     def loadTreeData(self):
         with sqlite3.connect(self.database_path) as conn:
