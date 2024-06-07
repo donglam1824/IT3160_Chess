@@ -13,6 +13,7 @@ if my_repo.is_dirty(untracked_files=True):
     print('Changes detected.')
     my_repo.index.add('MonteCarloRunner.py')
     my_repo.index.commit('database update')
+print(my_repo.remotes.origin.push())
 
 
 
