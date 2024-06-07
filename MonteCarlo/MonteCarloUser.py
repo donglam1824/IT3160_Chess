@@ -31,7 +31,7 @@ class MonteCarloUser:
 
     def findBestMove(self):
         "Trả về nước đi tốt nhất tìm được, theo [old_position, new_position]"
-        if(choosen_node != None):
+        if(self.current_node != None):
             choosen_node : Node =  self.miniMaxing(0, None, self.current_node, True, 3, -float("Inf"), float("Inf"))[1]
             return [choosen_node.old_position, choosen_node.new_position]
         else:
