@@ -3,13 +3,11 @@ from MonteCarlo.MonteCarloSearcher import MonteCarloSearcher
 # import os
 
 monte_carlo_searcher = MonteCarloSearcher()
-# monte_carlo_searcher.makeNewTree()
-for i in range(0, 150):
-    try: 
-        monte_carlo_searcher.loadTreeData()
-        monte_carlo_searcher.runAlgorihm(192)
-    except Exception:
-        monte_carlo_searcher.saveDataToFile()
+#monte_carlo_searcher.makeNewTree()
+for i in range(0, 10):
+    monte_carlo_searcher.loadTreeData()
+    monte_carlo_searcher.runAlgorihm(120)
+
 
 # my_repo = git.Repo(os.getcwd())
 # if my_repo.is_dirty(untracked_files=True):

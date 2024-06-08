@@ -7,8 +7,6 @@ import random, time
 max_simulate_depth = 20
 
 class MonteCarloSearcher:
-    reading_file_path = "MonteCarlo/readingfile.txt"
-    data_file_path = "MonteCarlo/datafile.bin"
     database_path = "MonteCarlo/database.db"
     database_backup_path = "MonteCarlo/database_backup.db"
     simulate_board = ChessBoard()
@@ -38,7 +36,7 @@ class MonteCarloSearcher:
                     max_uct = uct_value
                     max_node = node
             choosen_node = max_node
-        choosen_node.makeMoveToNode(self.simulate_board)
+            choosen_node.makeMoveToNode(self.simulate_board)
         return choosen_node
     
     def expansion(self, node : Node):
@@ -81,7 +79,6 @@ class MonteCarloSearcher:
     def runAlgorihm(self, running_time):
         "Chạy thuật toán trong khoảng thời gian (giây)"
         start_time = time.perf_counter()
-        count = 0
         while(time.perf_counter() - start_time < running_time):
             selected_node = self.selection()
             # print("Selection" , time.perf_counter() - start_time)
