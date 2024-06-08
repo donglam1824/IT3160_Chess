@@ -90,14 +90,20 @@ class ChessBoard:
     
     def revivePiece(self, revived_piece, piece_index, piece_symbol):
         "Hồi sinh 1 quân cờ"
-        if(revived_piece.side == "White"): 
-            self.captured_white_pieces.remove(revived_piece)
-            self.player_white.chess_pieces.insert(piece_index , revived_piece)
-        elif(revived_piece.side == "Black"): 
-            self.captured_black_pieces.remove(revived_piece)
-            self.player_black.chess_pieces.insert(piece_index , revived_piece)
-        self.board_display[revived_piece.position[0]][revived_piece.position[1]] = piece_symbol
-        self.last_captured_piece = None
+        try:
+            if(revived_piece.side == "White"): 
+                self.captured_white_pieces.remove(revived_piece)
+                self.player_white.chess_pieces.insert(piece_index , revived_piece)
+            elif(revived_piece.side == "Black"): 
+                self.captured_black_pieces.remove(revived_piece)
+                self.player_black.chess_pieces.insert(piece_index , revived_piece)
+            self.board_display[revived_piece.position[0]][revived_piece.position[1]] = piece_symbol
+            self.last_captured_piece = None
+        except Exception:
+            self.printBoard()
+            print(piece_symbol, revived_piece.position, revived_piece)
+            print("Black capture", self.captured_black_pieces)
+            print("White capture",self.captured_white_pieces)
 
     def pieceJustCaptured(self):
         """Checks if a piece was captured in the most recent move."""

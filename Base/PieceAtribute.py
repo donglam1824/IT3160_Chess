@@ -1,8 +1,8 @@
-from copy import deepcopy
+from copy import copy, deepcopy
 from Base.PieceEvaluation import EvaluatePiece
 class ChessPiece:
     "Các thược tính cơ bản của quân cờ"
-
+    move_count = 0
     def __init__(self, position, piece_value, name, side):
 #        self.occupied_tile.append(position)
         self.position = position
@@ -35,12 +35,12 @@ class ChessPiece:
         "Trả về các ô đi được của quân cờ đi được nhiều ô (Xe, Tịnh, Hậu)"
         movable_tile = []     
         for vector in move_vectors:
-            check_tile = deepcopy(self.position)
+            check_tile = copy(self.position)
             check_tile[0] += vector[0]
             check_tile[1] += vector[1]
             try:
                 while(board.board_display[check_tile[0]][check_tile[1]] == "0" and ChessPiece.isInTheBoard(check_tile)):
-                    movable_tile.append(deepcopy(check_tile))
+                    movable_tile.append(copy(check_tile))
                     check_tile[0] += vector[0]
                     check_tile[1] += vector[1]
                 #Thêm tile có quân cờ địch ăn được
@@ -48,7 +48,7 @@ class ChessPiece:
                     try:
                         block_piece = board.locatePiece(check_tile)
                         if(block_piece.side != self.side):
-                            movable_tile.append(deepcopy(check_tile))
+                            movable_tile.append(copy(check_tile))
                     except AttributeError:
                         print("Error NoneType", block_piece ,board.player_white.accended_paw)
                         board.printBoard()
@@ -63,18 +63,18 @@ class ChessPiece:
         "Trả về các ô đi được của quân cờ đi được 1 ô ô (Tốt, Mã, Vua)"
         movable_tile = []
         for vector in move_vectors:
-            check_tile = deepcopy(self.position)
+            check_tile = copy(self.position)
             check_tile[0] += vector[0]
             check_tile[1] += vector[1]
             if(ChessPiece.isInTheBoard(check_tile)):
                 if(board.board_display[check_tile[0]][check_tile[1]] == "0"):
-                    movable_tile.append(deepcopy(check_tile))
+                    movable_tile.append(copy(check_tile))
                     #Thêm tile có quân cờ địch ăn được (Trừ khi là Tốt)
                 else:
                     #Tìm quân cờ nằm trên đường đi của nhau
                     block_piece = board.locatePiece(check_tile)
                     if(block_piece.side != self.side and len(move_vectors) > 1):
-                        movable_tile.append(deepcopy(check_tile))
+                        movable_tile.append(copy(check_tile))
         self.gradePiece()
         return movable_tile
 

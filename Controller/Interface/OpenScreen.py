@@ -25,10 +25,10 @@ class OpenScreen:
 
     # Các nút chọn chế độ chơi
     buttons = [
-    {"text": "Player vs Player", "rect": pygame.Rect(400, 200, 200, 50), "AI": (False, False, False)},
-    {"text": "Player vs Minimax", "rect": pygame.Rect(400, 320, 200, 50), "AI": (False, True, False)},
-    {"text": "Player vs MTCS", "rect": pygame.Rect(400, 440, 200, 50), "AI": (False, True, True)},
-    {"text": "Minimax vs MTCS", "rect": pygame.Rect(400, 560, 200, 50), "AI": (True, True, True)}]
+    {"text": "Player vs Player", "rect": pygame.Rect(400, 200, 200, 50), "AI": (False, False, False, False)},
+    {"text": "Player vs Minimax", "rect": pygame.Rect(400, 320, 200, 50), "AI": (False, True, False, False)},
+    {"text": "Player vs MTCS", "rect": pygame.Rect(400, 440, 200, 50), "AI": (False, True, False, True)},
+    {"text": "MTCS vs Minimax", "rect": pygame.Rect(400, 560, 200, 50), "AI": (True, True, True, False)}]
 
     def __init__(self):
         pygame.display.set_icon(icon)
@@ -47,7 +47,7 @@ class OpenScreen:
                     for button in self.buttons:
                         if button["rect"].collidepoint(event.pos):
                             # Tạo Controller với chế độ chơi đã chọn
-                            self.controller = Controller(button["AI"][0], button["AI"][1], button["AI"][2])
+                            self.controller = Controller(button["AI"][0], button["AI"][1], button["AI"][2], button["AI"][3])
                             running = False  # Thoát khỏi vòng lặp menu
                             break  # Thoát khỏi vòng lặp duyệt nút
             

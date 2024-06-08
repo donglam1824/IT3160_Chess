@@ -109,8 +109,10 @@ class King(ChessPiece):
             if(player.rock_1.has_moved == False and len(self.updateMove_Multiple([[0, -1]], board)) == 3):
                 movable_tile.append([self.position[0], self.position[1] -2])
             #KT Xe bên phải
-            if(player.rock_1.has_moved == False and len(self.updateMove_Multiple([[0, 1]], board)) == 2):
-                movable_tile.append([self.position[0], self.position[1] +2])
+            if(player.rock_2.has_moved == False):
+                check_vector = self.updateMove_Multiple([[0, 1]], board)
+                if(len(check_vector) == 2 and board.board_display[check_vector[1][0]][check_vector[1][1]] == "0"):
+                    movable_tile.append([self.position[0], self.position[1] +2])
         return movable_tile
     
     def returnToPosition(self, new_position, board):

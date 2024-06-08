@@ -4,9 +4,13 @@ from MonteCarlo.MonteCarloSearcher import MonteCarloSearcher
 
 monte_carlo_searcher = MonteCarloSearcher()
 #monte_carlo_searcher.makeNewTree()
-for i in range(0, 10):
+for i in range(0, 20):
     monte_carlo_searcher.loadTreeData()
-    monte_carlo_searcher.runAlgorihm(200)
+    try:
+        monte_carlo_searcher.runAlgorihm(120)
+    except Exception:
+        monte_carlo_searcher.saveDataToFile()
+        continue
 
 
 # my_repo = git.Repo(os.getcwd())

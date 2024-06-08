@@ -1,4 +1,5 @@
 from copy import copy, deepcopy
+import random
 from Base.ChessBoard import ChessBoard
 from Controller.Interface.GameInterface import GameInterface
 from Minimax.WhiteMax import WhiteMax
@@ -14,20 +15,22 @@ class Controller:
     sound_manager = SoundManager()
     minimax_black = BlackMax(3)
     minimax_white = WhiteMax(2)
-    monte_carlo_user = MonteCarloUser()
-    def __init__(self, enable_white_AI: bool, enable_black_AI: bool, enable_MCTS):
+    def __init__(self, enable_white_AI: bool, enable_black_AI: bool, enable_MCTS_white : bool, enable_MCTS_black : bool):
         pygame.mixer.init()
         self.white_AI = False
         self.black_AI = False
-        self.enable_MCTS = enable_MCTS
+        self.enable_MCTS_white = enable_MCTS_white
+        self.enable_MCTS_black = enable_MCTS_black
         self.possible_move_white = []
         self.possible_move_black = []
         self.previous_move = {"old position" : [], "new position" : []}
         self.makeNewGame(enable_white_AI, enable_black_AI, 3, 4)
+        self.monte_carlo_user = MonteCarloUser()
         self.movable_tile = []
         self.choosen_piece = None
         self.king_is_checked = [False, ""]
         self.turn_step = 0
+        self.move_count = 0 # For the fifty-move rules
     
     def makeNewGame(self, enable_white_AI : bool, enable_black_AI: bool,
                     max_depth_white : int, max_depth_black : int):
@@ -116,9 +119,9 @@ class Controller:
 
     def aiMakeMove(self):
         "AI thực hiện nước đi"
-        if(self.enable_MCTS == False):
-            #Minimax tìm nước đi
-            if(self.turn_step <= 1 and self.white_AI == True):
+        #Minimax tìm nước đi
+        if(self.turn_step <= 1 and self.white_AI == True and self.enable_MCTS_white == False):
+            try:
                 best = self.minimax_white.miniMax(0, "", "", True, self.board, -float("Inf"), float("Inf"))
                 self.choosen_piece = self.board.player_white.chess_pieces[best[1]]
                 self.previous_move["old position"] = self.choosen_piece.position
@@ -126,7 +129,18 @@ class Controller:
                 self.turn_step = 2
                 self.onMove()
                 return
-            if(self.turn_step > 1 and self.turn_step <= 3 and self.black_AI == True):
+            except Exception:
+                #Error in finding move, make a random move instead
+                print("Error in finding move, make a random move instead")
+                choosen_move = random.choice(self.possible_move_white)
+                self.choosen_piece == choosen_move[0]
+                self.previous_move["old position"] = self.choosen_piece.position
+                self.makeMove(choosen_move[1], self.board)
+                self.turn_step = 2
+                self.onMove()
+                return
+        if(self.turn_step > 1 and self.turn_step <= 3 and self.black_AI == True and self.enable_MCTS_black == False):
+            try:
                 best = self.minimax_black.miniMax(0, "", "", True, self.board, -float("Inf"), float("Inf"))
                 self.choosen_piece = self.board.player_black.chess_pieces[best[1]]
                 self.previous_move["old position"] = self.choosen_piece.position
@@ -134,24 +148,33 @@ class Controller:
                 self.turn_step = 0
                 self.onMove()
                 return
-        else:
-            #Monte Carlo tìm nước đi
-            if(self.turn_step <= 1 and self.white_AI == True):
-                best = self.monte_carlo_user.findBestMove()
-                self.choosen_piece = self.board.locatePiece(best[0])
-                self.previous_move["old position"] = best[0]
-                self.choosen_piece.makeMove(best[1], self.board)
-                self.turn_step = 2
-                self.onMove()
-                return
-            if(self.turn_step > 1 and self.turn_step <= 3 and self.black_AI == True):
-                best = self.monte_carlo_user.findBestMove()
-                self.choosen_piece = self.board.locatePiece(best[0])
-                self.previous_move["old position"] = best[0]
-                self.choosen_piece.makeMove(best[1], self.board)
+            except Exception:
+                #Error in finding move, make a random move instead
+                print("Error in finding move, make a random move instead")
+                choosen_move = random.choice(self.possible_move_white)
+                self.choosen_piece == choosen_move[0]
+                self.previous_move["old position"] = self.choosen_piece.position
+                self.makeMove(choosen_move[1], self.board)
                 self.turn_step = 0
                 self.onMove()
                 return
+        #Monte Carlo tìm nước đi
+        if(self.turn_step <= 1 and self.white_AI == True and self.enable_MCTS_white == True):
+            best = self.monte_carlo_user.findBestMove()
+            self.choosen_piece = self.board.locatePiece(best[0])
+            self.previous_move["old position"] = best[0]
+            self.choosen_piece.makeMove(best[1], self.board)
+            self.turn_step = 2
+            self.onMove()
+            return
+        if(self.turn_step > 1 and self.turn_step <= 3 and self.black_AI == True and self.enable_MCTS_black == True):
+            best = self.monte_carlo_user.findBestMove()
+            self.choosen_piece = self.board.locatePiece(best[0])
+            self.previous_move["old position"] = best[0]
+            self.choosen_piece.makeMove(best[1], self.board)
+            self.turn_step = 0
+            self.onMove()
+            return
     
     def onMove(self):
         "Event xảy ra khi một nước đi được thực hiện"
@@ -163,6 +186,7 @@ class Controller:
         self.possible_move_white = self.board.getPossibleMoveWhite()
         self.possible_move_black = self.board.getPossibleMoveBlack()
         self.sound_manager.playMoveSound()
+        self.move_count += 1
 
         if self.board.pieceJustCaptured():  # Kiểm tra trực tiếp, không cần qua biến tạm
             self.sound_manager.capture_sound.play()

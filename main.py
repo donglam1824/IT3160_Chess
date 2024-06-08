@@ -1,10 +1,14 @@
+import time
 import pygame
 
+from Base.ChessBoard import ChessBoard
 from Controller.Controller import Controller
+from Controller.Interface.SoundGame import SoundManager
 from Controller.Interface.OpenScreen import OpenScreen
 import pygame
 
 pygame.init()
+sound = SoundManager()
 def main():
     controller : Controller
     open_screen = OpenScreen()
@@ -23,11 +27,14 @@ def main():
                 click_coords = [y_coord, x_coord]
                 controller.onClick(click_coords)
             if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN and controller.game_ended[0] == True:
-               #Về màn hình chính, xóa hết các đối tượng và gọi lại main
+            #Về màn hình chính, xóa hết các đối tượng và gọi lại main
                 controller == None
                 open_screen == None
                 main()
                 return
 
+
 if __name__ == "__main__":
     main()
+            
+

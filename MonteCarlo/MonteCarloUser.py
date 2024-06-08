@@ -17,8 +17,8 @@ class MonteCarloUser:
         self.root : Node = None
         self.loadTreeData()
         self.current_node = self.root
-        self.current_board = ChessBoard()
-    
+        self.current_board = ChessBoard()        
+
     def moveToNode(self, old_position, new_position):
         "Di chuyển tới nút"
         for node in self.current_node.children:
@@ -29,15 +29,15 @@ class MonteCarloUser:
                 if(len(self.current_node.children) == 0):
                     self.expansion(self.current_node)
                 return
-        print("error, can't find node")
-        exit(1)
+        print("Can't find node")
+        return None
 
 
 
     def findBestMove(self):
         "Trả về nước đi tốt nhất tìm được, theo [old_position, new_position]"
-        if(self.current_node.children[0].visited > 0):
-            choosen_node : Node =  self.miniMaxing(0, None, self.current_node, True, 3, -float("Inf"), float("Inf"))[1]
+        if(self.current_node.children[0].visited > 0 and self.current_node != None):
+            choosen_node : Node =  self.miniMaxing(0, None, self.current_node, True, 4, -float("Inf"), float("Inf"))[1]
             return [choosen_node.old_position, choosen_node.new_position]
         else:
             if(self.current_node.current_side == "White"):
