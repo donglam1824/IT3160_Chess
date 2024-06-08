@@ -93,7 +93,8 @@ class MonteCarloSearcher:
             # print("Simulate" , time.perf_counter() - start_time)
             self.backPropagation(value, selected_node)
             # print("Back Propagate" , time.perf_counter() - start_time)
-            print( "Iteration: ", self.root.visited,", time:",self.total_time + time.perf_counter() - start_time)
+            if(self.root.visited%10 == 0):
+                print( "Iteration: ", self.root.visited,", time:",self.total_time + time.perf_counter() - start_time)
         self.total_time += time.perf_counter() - start_time
         self.saveDataToFile()
 
@@ -101,10 +102,6 @@ class MonteCarloSearcher:
         return
     
     def saveDataToFile(self):
-        open(self.reading_file_path, "+w").close()
-        open(self.reading_file_path, "a").write("--- [turn, visited, total] ---\n")
-        self.writeReadableTreeData(self.root, 0)
-        open(self.data_file_path, "+w").close()
         #Create and connect to the database
         conn = sqlite3.connect(self.database_path)
         cursor = conn.cursor()
@@ -115,20 +112,6 @@ class MonteCarloSearcher:
         self.writeSQLiteTreeData(cursor, self.root, 0)
         conn.commit()
         conn.close()
-
-    def writeReadableTreeData(self, node : Node, spacing):
-        tab_space = ""
-        for i in range(0, spacing):
-            tab_space += "\t"
-        file = open(self.reading_file_path, "a")
-
-        file.write(tab_space + "---" + str([node.current_side, node.visited, node.total, 
-                node.moving_piece, node.old_position, node.new_position]) + "---" + "\n\n")
-        file.close()
-        if(node.children == []): return
-        node.children.sort(key= lambda x: x.visited, reverse=True)
-        for child in node.children:
-            self.writeReadableTreeData(child, spacing + 1)
     
     def writeSQLiteTreeData(self, cursor, node : Node, depth):
         "Lưu data để máy sử dụng"
