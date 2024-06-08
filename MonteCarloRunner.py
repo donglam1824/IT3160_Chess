@@ -7,7 +7,7 @@ monte_carlo_searcher = MonteCarloSearcher()
 for i in range(0, 20):
     monte_carlo_searcher.loadTreeData()
     try:
-        monte_carlo_searcher.runAlgorihm(120)
+        monte_carlo_searcher.runAlgorihm(500)
     except Exception:
         monte_carlo_searcher.saveDataToFile()
         continue
