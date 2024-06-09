@@ -6,11 +6,7 @@ monte_carlo_searcher = MonteCarloSearcher()
 #monte_carlo_searcher.makeNewTree()
 for i in range(0, 20):
     monte_carlo_searcher.loadTreeData()
-    try:
-        monte_carlo_searcher.runAlgorihm(500)
-    except Exception:
-        monte_carlo_searcher.saveDataToFile()
-        continue
+    monte_carlo_searcher.runAlgorihm(120)
 
 
 # my_repo = git.Repo(os.getcwd())

@@ -56,7 +56,6 @@ class MonteCarloSearcher:
     def simulate(self, current_side):
         "Đi random nước đi và lấy giá trị cuối cùng"
         #start_time = time.time()
-        current_side = current_side
         evaluated_side = Player.getOppositeSide(current_side)
         for i in range(0, max_simulate_depth):
             if(current_side == "White"):
@@ -64,32 +63,37 @@ class MonteCarloSearcher:
             else: possible_move = self.simulate_board.getPossibleMoveBlack() # Lấy bên White
             #print("get moves" , time.time() - start_time)
             if(len(possible_move) == 0):
-                return self.simulate_board.evaluateBoard(evaluated_side)
+                if(current_side == evaluated_side):
+                    bonus = -5*(20-i) #Game thắng càng gần thì càng dc nhiều điểm hơn
+                else: bonus = 5*(20-i)
+                return self.simulate_board.evaluateBoard(evaluated_side) + bonus
             current_side = Player.getOppositeSide(current_side)
             choosen_move = random.choice(possible_move)
             choosen_move[0].makeMove(choosen_move[1], self.simulate_board)
         return self.simulate_board.evaluateBoard(evaluated_side)
 
-    def backPropagation(self, value, node : Node):
+    def backPropagation(self, value, node : Node, decaying_factor = 0.9):
         "Update ngược lại giá trị các node trên đường đi"
         if(node == None): return
         node.updateState(value)
-        self.backPropagation(value ,node.parent)
+        value = value * decaying_factor #Giảm dần value khi càng lên cao hơn
+        self.backPropagation(value ,node.parent, decaying_factor)
     
     def runAlgorihm(self, running_time):
         "Chạy thuật toán trong khoảng thời gian (giây)"
         start_time = time.perf_counter()
         while(time.perf_counter() - start_time < running_time):
             selected_node = self.selection()
-            # print("Selection" , time.perf_counter() - start_time)
             if(selected_node.visited != 0):
                 self.expansion(selected_node)
-                # print("Expansion" , time.perf_counter() - start_time)
+                if(len(selected_node.children) == 0):
+                    #Hết nc đi để expand, tức là game kết thúc
+                    print("Reach terminal state")
+                    self.backPropagation(200, selected_node, 0.4)
+                    continue
                 selected_node = selected_node.children[0]
             value = self.simulate(selected_node.current_side)
-            # print("Simulate" , time.perf_counter() - start_time)
             self.backPropagation(value, selected_node)
-            # print("Back Propagate" , time.perf_counter() - start_time)
             if(self.root.visited%10 == 0):
                 print( "Iteration: ", self.root.visited,", time:",self.total_time + time.perf_counter() - start_time)
         self.total_time += time.perf_counter() - start_time
@@ -131,6 +135,7 @@ class MonteCarloSearcher:
         self.root.total = tree_data[1][2]
         tree_data.remove(tree_data[0]) #Bỏ các dữ liệu đầu đã sử dụng
         tree_data.remove(tree_data[0])
+        print("Read file successfully ,Loading data")
 
         node_stack = [self.root]
         previous_node = self.root
@@ -152,6 +157,7 @@ class MonteCarloSearcher:
             new_node.total = node_data[2]
             parent.children.append(new_node)
             previous_node = new_node
+        print("Data load successfully")
         return
     
 
