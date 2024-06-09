@@ -85,7 +85,7 @@ class ChessBoard:
             self.captured_black_pieces.append(eaten_piece)
         self.last_captured_piece = eaten_piece
         if((self.player_black.queen in self.captured_black_pieces and self.player_white.queen in self.captured_white_pieces) 
-        or len(self.getAllPieces()) <= 14):
+        or len(self.getAllPieces()) <= 10):
             self.updateToEndingState() #Khi Hậu bị ăn hết hoặc còn 14 quân trên bàn đấu, chuyển về Ending
     
     def revivePiece(self, revived_piece, piece_index, piece_symbol):

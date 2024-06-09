@@ -128,6 +128,9 @@ class Controller:
         if(self.turn_step <= 1 and self.white_AI == True and self.enable_MCTS_white == False):
             best = self.minimax_white.miniMax(0, "", "", True, self.board, -float("Inf"), float("Inf"))
             self.choosen_piece = self.board.player_white.chess_pieces[best[1]]
+            if([self.choosen_piece ,best[2]] not in self.possible_move_white):
+                self.makeRandomMove()
+                return
             self.previous_move["old position"] = self.choosen_piece.position
             self.choosen_piece.makeMove(best[2], self.board)
             self.turn_step = 2
@@ -136,6 +139,9 @@ class Controller:
         if(self.turn_step > 1 and self.turn_step <= 3 and self.black_AI == True and self.enable_MCTS_black == False):
             best = self.minimax_black.miniMax(0, "", "", True, self.board, -float("Inf"), float("Inf"))
             self.choosen_piece = self.board.player_black.chess_pieces[best[1]]
+            if([self.choosen_piece ,best[2]] not in self.possible_move_black):
+                self.makeRandomMove()
+                return
             self.previous_move["old position"] = self.choosen_piece.position
             self.choosen_piece.makeMove(best[2], self.board)
             self.turn_step = 0
@@ -145,6 +151,9 @@ class Controller:
         if(self.turn_step <= 1 and self.white_AI == True and self.enable_MCTS_white == True):
             best = self.monte_carlo_user.findBestMove()
             self.choosen_piece = self.board.locatePiece(best[0])
+            if([self.choosen_piece ,best[1]] not in self.possible_move_white):
+                self.makeRandomMove()
+                return
             self.previous_move["old position"] = best[0]
             self.choosen_piece.makeMove(best[1], self.board)
             self.turn_step = 2
@@ -153,6 +162,9 @@ class Controller:
         if(self.turn_step > 1 and self.turn_step <= 3 and self.black_AI == True and self.enable_MCTS_black == True):
             best = self.monte_carlo_user.findBestMove()
             self.choosen_piece = self.board.locatePiece(best[0])
+            if([self.choosen_piece ,best[1]] not in self.possible_move_black):
+                self.makeRandomMove()
+                return
             self.previous_move["old position"] = best[0]
             self.choosen_piece.makeMove(best[1], self.board)
             self.turn_step = 0
