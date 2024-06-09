@@ -98,6 +98,7 @@ class MonteCarloUser:
 
 
     def loadTreeData(self):
+        print("reading data")
         with sqlite3.connect(self.database_path) as conn:
             cursor = conn.cursor()
             cursor.execute('SELECT * FROM Monte_Carlo_Tree')
@@ -107,6 +108,7 @@ class MonteCarloUser:
         self.root.total = tree_data[1][2]
         tree_data.remove(tree_data[0]) #Bỏ các dữ liệu đầu đã sử dụng
         tree_data.remove(tree_data[0])
+        print("Successful, loading data")
 
         node_stack = [self.root]
         previous_node = self.root
@@ -128,4 +130,5 @@ class MonteCarloUser:
             new_node.total = node_data[2]
             parent.children.append(new_node)
             previous_node = new_node
+        print("Loading complete")
         return

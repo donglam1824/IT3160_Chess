@@ -61,7 +61,12 @@ class Controller:
         if(self.game_ended[0] == True): self.interface.draw_game_over(self.game_ended[1])
         pygame.display.update()
         
-        if(self.game_ended[0] == False): self.aiMakeMove()
+        if(self.game_ended[0] == False): 
+            try:
+                self.aiMakeMove()
+            except Exception:
+                print("Error in finding move, make a random move instead")
+                self.makeRandomMove()
         if self.interface.counter < 30:
             self.interface.counter += 1
         else:
@@ -121,43 +126,21 @@ class Controller:
         "AI thực hiện nước đi"
         #Minimax tìm nước đi
         if(self.turn_step <= 1 and self.white_AI == True and self.enable_MCTS_white == False):
-            try:
-                best = self.minimax_white.miniMax(0, "", "", True, self.board, -float("Inf"), float("Inf"))
-                self.choosen_piece = self.board.player_white.chess_pieces[best[1]]
-                self.previous_move["old position"] = self.choosen_piece.position
-                self.choosen_piece.makeMove(best[2], self.board)
-                self.turn_step = 2
-                self.onMove()
-                return
-            except Exception:
-                #Error in finding move, make a random move instead
-                print("Error in finding move, make a random move instead")
-                choosen_move = random.choice(self.possible_move_white)
-                self.choosen_piece == choosen_move[0]
-                self.previous_move["old position"] = self.choosen_piece.position
-                self.makeMove(choosen_move[1], self.board)
-                self.turn_step = 2
-                self.onMove()
-                return
+            best = self.minimax_white.miniMax(0, "", "", True, self.board, -float("Inf"), float("Inf"))
+            self.choosen_piece = self.board.player_white.chess_pieces[best[1]]
+            self.previous_move["old position"] = self.choosen_piece.position
+            self.choosen_piece.makeMove(best[2], self.board)
+            self.turn_step = 2
+            self.onMove()
+            return
         if(self.turn_step > 1 and self.turn_step <= 3 and self.black_AI == True and self.enable_MCTS_black == False):
-            try:
-                best = self.minimax_black.miniMax(0, "", "", True, self.board, -float("Inf"), float("Inf"))
-                self.choosen_piece = self.board.player_black.chess_pieces[best[1]]
-                self.previous_move["old position"] = self.choosen_piece.position
-                self.choosen_piece.makeMove(best[2], self.board)
-                self.turn_step = 0
-                self.onMove()
-                return
-            except Exception:
-                #Error in finding move, make a random move instead
-                print("Error in finding move, make a random move instead")
-                choosen_move = random.choice(self.possible_move_white)
-                self.choosen_piece == choosen_move[0]
-                self.previous_move["old position"] = self.choosen_piece.position
-                self.makeMove(choosen_move[1], self.board)
-                self.turn_step = 0
-                self.onMove()
-                return
+            best = self.minimax_black.miniMax(0, "", "", True, self.board, -float("Inf"), float("Inf"))
+            self.choosen_piece = self.board.player_black.chess_pieces[best[1]]
+            self.previous_move["old position"] = self.choosen_piece.position
+            self.choosen_piece.makeMove(best[2], self.board)
+            self.turn_step = 0
+            self.onMove()
+            return
         #Monte Carlo tìm nước đi
         if(self.turn_step <= 1 and self.white_AI == True and self.enable_MCTS_white == True):
             best = self.monte_carlo_user.findBestMove()
@@ -176,6 +159,21 @@ class Controller:
             self.onMove()
             return
     
+    def makeRandomMove(self):
+        "Đi nước random trong tập nước hợp lệ"
+        if(self.turn_step <= 1):
+            possible_move = self.possible_move_white
+            next_turn = 2
+        elif(self.turn_step > 1 and self.turn_step <= 3):
+            possible_move = self.possible_move_black
+            next_turn = 0
+        choosen_move = random.choice(possible_move)
+        self.choosen_piece = choosen_move[0]
+        self.previous_move["old position"] = self.choosen_piece.position
+        self.choosen_piece.makeMove(choosen_move[1], self.board)
+        self.turn_step = next_turn
+        self.onMove()
+
     def onMove(self):
         "Event xảy ra khi một nước đi được thực hiện"
         self.movable_tile = []
