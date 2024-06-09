@@ -7,7 +7,7 @@ import random, time
 max_simulate_depth = 20
 
 class MonteCarloSearcher:
-    database_path = "MonteCarlo/database.db"
+    database_path = "MonteCarlo\database copy.db"
     database_backup_path = "MonteCarlo/database_backup.db"
     simulate_board = ChessBoard()
 
