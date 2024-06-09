@@ -9,7 +9,7 @@ from Minimax.WhiteMax import WhiteMax
 
 
 class MonteCarloUser: 
-    database_path = "MonteCarlo/database.db"
+    database_path = "MonteCarlo\database copy.db"
     minimax_white = WhiteMax(3)
     minimax_black = BlackMax(3)
 

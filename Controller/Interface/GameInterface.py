@@ -34,9 +34,9 @@ class GameInterface:
         for row in range(8):
             for col in range(8):
                 if (row + col) % 2 == 0:
-                    pygame.draw.rect(self.screen, LIGHT_SQUARE_COLOR, [col * 100, row * 100, 100, 100])
-                else:
                     pygame.draw.rect(self.screen, DARK_SQUARE_COLOR, [col * 100, row * 100, 100, 100])
+                else:
+                    pygame.draw.rect(self.screen, LIGHT_SQUARE_COLOR, [col * 100, row * 100, 100, 100])
 
         pygame.draw.rect(self.screen, 'gray', [0, 800, self.WIDTH, 100])
         pygame.draw.rect(self.screen, 'gold', [0, 800, self.WIDTH, 100], 5)
